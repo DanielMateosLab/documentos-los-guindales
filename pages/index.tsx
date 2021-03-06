@@ -4,7 +4,8 @@ export default function Home() {
   return (
     <Container>
       <Typography variant="h4" component="h1" align="center">
-        Salvoconducto para el taller del 27-28 de marzo
+        Salvoconducto para el Taller de Hierbas Medicinales, del 13 al 14 de
+        marzo de 2021.
       </Typography>
     </Container>
   )
