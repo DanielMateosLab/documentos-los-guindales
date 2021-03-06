@@ -1,4 +1,4 @@
-import Home, { eventDates, eventName } from "pages"
+import Home, { event } from "pages"
 import { render } from "utils/testUtils"
 import { formatDate } from "utils/utils"
 
@@ -14,7 +14,7 @@ describe("index", () => {
     it("should display the event name", () => {
       const { getByText } = render(<Home />)
 
-      const eventNameElement = getByText(new RegExp(eventName), {
+      const eventNameElement = getByText(new RegExp(event.name), {
         selector: "h1 ",
       })
 
@@ -24,11 +24,9 @@ describe("index", () => {
       const { getByText } = render(<Home />)
 
       const startDateElement = getByText(
-        new RegExp(formatDate(eventDates.startDate))
+        new RegExp(formatDate(event.startDate))
       )
-      const endDateElement = getByText(
-        new RegExp(formatDate(eventDates.endDate))
-      )
+      const endDateElement = getByText(new RegExp(formatDate(event.endDate)))
 
       expect(startDateElement).toBeDefined()
       expect(endDateElement).toBeDefined()
