@@ -1,7 +1,7 @@
 import { CssBaseline, ThemeProvider } from "@material-ui/core"
 import { AppProps } from "next/dist/next-server/lib/router/router"
 import Head from "next/head"
-import theme from "../client/theme"
+import theme from "client/theme"
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
