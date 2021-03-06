@@ -1,7 +1,13 @@
-import { Container, Typography } from "@material-ui/core"
+import { Container, makeStyles, Typography } from "@material-ui/core"
 import moment from "moment"
 import { AppEvent } from "types"
 import { formatDate } from "utils/utils"
+
+const useStyles = makeStyles(() => ({
+  container: {
+    marginTop: "24px",
+  },
+}))
 
 export const event: AppEvent = {
   name: "Taller de Hierbas Medicinales",
@@ -10,8 +16,10 @@ export const event: AppEvent = {
 }
 
 export default function Home() {
+  const classes = useStyles()
+
   return (
-    <Container>
+    <Container className={classes.container}>
       <Typography variant="h4" component="h1" align="center">
         Salvoconducto para el {event.name}.
       </Typography>
