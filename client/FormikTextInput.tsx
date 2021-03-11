@@ -1,0 +1,34 @@
+import TextField, { TextFieldProps } from "@material-ui/core/TextField"
+import { FieldHookConfig, useField } from "formik"
+import { InputHTMLAttributes } from "react"
+
+//TODO: Move this code into a module to avoid repetition across projects.
+
+interface Props {
+  label: string
+  type: InputHTMLAttributes<HTMLInputElement>
+}
+type ComposedProps = FieldHookConfig<any> & TextFieldProps & Props
+
+export default function FormikTextInput({
+  label,
+  type,
+  ...props
+}: ComposedProps) {
+  const [field, meta] = useField(props)
+
+  delete props.validate // Causes an error if passed to TextField
+
+  return (
+    <TextField
+      {...field}
+      {...props}
+      label={label}
+      id={field.name}
+      type={type}
+      variant="outlined"
+      error={meta.touched && !!meta.error}
+      helperText={meta.touched && meta.error}
+    />
+  )
+}
