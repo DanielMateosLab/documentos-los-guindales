@@ -1,11 +1,31 @@
-import { Container, makeStyles, Typography } from "@material-ui/core"
+import {
+  Container,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  makeStyles,
+  NativeSelect,
+  Typography,
+} from "@material-ui/core"
+import FormikTextInput from "client/components/FormikTextInput"
+import { Formik } from "formik"
 import moment from "moment"
-import { AppEvent } from "types"
+import { AppEvent } from "utils/types"
 import { formatDate } from "utils/utils"
+import { safeConductValidator } from "utils/validation"
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     marginTop: "24px",
+    padding: theme.spacing(1),
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  formElement: {
+    marginTop: theme.spacing(2),
   },
 }))
 
@@ -26,6 +46,66 @@ export default function Home() {
       <Typography variant="subtitle1" align="center">
         Del {formatDate(event.startDate)} al {formatDate(event.endDate)}.
       </Typography>
+      <Formik
+        initialValues={{
+          name: "",
+          identityDocument: "",
+          gender: "",
+          email: "",
+        }}
+        validationSchema={safeConductValidator}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(false)
+        }}
+      >
+        {(formik) => (
+          <form onSubmit={formik.handleSubmit} className={classes.form}>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="name"
+                variant="outlined"
+                type="text"
+                label="Nombre"
+              />
+            </div>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="identityDocument"
+                variant="outlined"
+                type="text"
+                label="DNI/NIE"
+              />
+            </div>
+            <div className={classes.formElement}>
+              <FormikTextInput
+                name="email"
+                variant="outlined"
+                type="text"
+                label="Correo electrónico"
+              />
+            </div>
+            <FormControl variant="outlined" className={classes.formElement}>
+              <InputLabel htmlFor="gender">Género</InputLabel>
+              {/* TODO */}
+              <NativeSelect
+                value={formik.values.gender}
+                onChange={(value) => formik.setFieldValue("gender", value)}
+                inputProps={{
+                  name: "gender",
+                  id: "gender",
+                }}
+              >
+                <option value="">Desconocido/otros</option>
+                <option value={"male"}>Masculino</option>
+                <option value={"female"}>Femenino</option>
+              </NativeSelect>
+              {formik.errors.gender && (
+                <FormHelperText>{formik.errors.gender}</FormHelperText>
+              )}
+            </FormControl>
+          </form>
+        )}
+      </Formik>
     </Container>
   )
 }
