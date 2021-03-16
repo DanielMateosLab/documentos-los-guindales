@@ -30,6 +30,7 @@ export const event: AppEvent = {
 export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
+export const submitButtonText = "Generar salvoconducto"
 
 export default function Home() {
   const classes = useStyles()
@@ -86,7 +87,7 @@ export default function Home() {
                 type="submit"
                 disabled={formik.isSubmitting}
               >
-                Generar salvoconducto
+                {submitButtonText}
               </Button>
             </div>
           </form>
