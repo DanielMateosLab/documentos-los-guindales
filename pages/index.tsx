@@ -42,7 +42,6 @@ export default function Home() {
         initialValues={{
           name: "",
           identityDocument: "",
-          gender: "",
           email: "",
         }}
         validationSchema={safeConductValidator}
