@@ -14,27 +14,25 @@ describe("index", () => {
   })
   describe("page title", () => {
     it("should have a title", () => {
-      const titleElement = screen.getByText("Salvoconducto", {
-        selector: "h1",
-        exact: false,
+      const titleElement = screen.getByRole("heading", {
+        name: new RegExp("Salvoconducto"),
       })
 
       expect(titleElement).toBeDefined()
     })
     it("should display the event name", () => {
-      const eventNameElement = screen.getByText(event.name, {
-        selector: "h1 ",
-        exact: false,
+      const eventNameElement = screen.getByRole("heading", {
+        name: new RegExp(event.name),
       })
 
       expect(eventNameElement).toBeDefined()
     })
     it("should display the event dates", () => {
-      const startDateElement = screen.getByText(formatDate(event.startDate), {
-        exact: false,
+      const startDateElement = screen.getByRole("heading", {
+        name: new RegExp(formatDate(event.startDate)),
       })
-      const endDateElement = screen.getByText(formatDate(event.endDate), {
-        exact: false,
+      const endDateElement = screen.getByRole("heading", {
+        name: new RegExp(formatDate(event.endDate)),
       })
 
       expect(startDateElement).toBeDefined()
