@@ -1,12 +1,4 @@
-import {
-  Container,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  makeStyles,
-  NativeSelect,
-  Typography,
-} from "@material-ui/core"
+import { Container, makeStyles, Typography } from "@material-ui/core"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
@@ -84,25 +76,6 @@ export default function Home() {
                 label="Correo electrónico"
               />
             </div>
-            <FormControl variant="outlined" className={classes.formElement}>
-              <InputLabel htmlFor="gender">Género</InputLabel>
-              {/* TODO */}
-              <NativeSelect
-                value={formik.values.gender}
-                onChange={(value) => formik.setFieldValue("gender", value)}
-                inputProps={{
-                  name: "gender",
-                  id: "gender",
-                }}
-              >
-                <option value="">Desconocido/otros</option>
-                <option value={"male"}>Masculino</option>
-                <option value={"female"}>Femenino</option>
-              </NativeSelect>
-              {formik.errors.gender && (
-                <FormHelperText>{formik.errors.gender}</FormHelperText>
-              )}
-            </FormControl>
           </form>
         )}
       </Formik>

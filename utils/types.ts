@@ -5,5 +5,3 @@ export interface AppEvent {
   startDate: Moment
   endDate: Moment
 }
-
-export type Gender = "male" | "female"
