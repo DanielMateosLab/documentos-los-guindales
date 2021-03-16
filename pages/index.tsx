@@ -50,7 +50,14 @@ export default function Home() {
           email: "",
         }}
         validationSchema={safeConductValidator}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={async (values, { setSubmitting }) => {
+          await fetch("/api/safeConduct", {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(values),
+          })
           setSubmitting(false)
         }}
       >
