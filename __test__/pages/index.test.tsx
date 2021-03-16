@@ -57,9 +57,11 @@ describe("index", () => {
         expect(emailInput).toBeInTheDocument()
       })
       it("should have a submit button", () => {
-        const submitBUtton = screen.getByRole("button", {
+        const submitButton = screen.getByRole("button", {
           name: submitButtonText,
         })
+
+        expect(submitButton).toBeInTheDocument()
       })
     })
   })
