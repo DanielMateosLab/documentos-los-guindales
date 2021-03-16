@@ -1,4 +1,4 @@
-import { Container, makeStyles, Typography } from "@material-ui/core"
+import { Button, Container, makeStyles, Typography } from "@material-ui/core"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
@@ -75,6 +75,16 @@ export default function Home() {
                 type="text"
                 label="Correo electrónico"
               />
+            </div>
+            <div className={classes.formElement}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={formik.isSubmitting}
+              >
+                Generar salvoconducto
+              </Button>
             </div>
           </form>
         )}
