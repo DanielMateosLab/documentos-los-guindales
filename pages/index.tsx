@@ -27,6 +27,10 @@ export const event: AppEvent = {
   endDate: moment("2021-03-14"),
 }
 
+export const nameLabel = "Nombre"
+export const identityDocumentLabel = "DNI/NIE"
+export const emailLabel = "Correo electrónico"
+
 export default function Home() {
   const classes = useStyles()
 
@@ -56,7 +60,7 @@ export default function Home() {
                 name="name"
                 variant="outlined"
                 type="text"
-                label="Nombre"
+                label={nameLabel}
               />
             </div>
             <div className={classes.formElement}>
@@ -64,7 +68,7 @@ export default function Home() {
                 name="identityDocument"
                 variant="outlined"
                 type="text"
-                label="DNI/NIE"
+                label={identityDocumentLabel}
               />
             </div>
             <div className={classes.formElement}>
@@ -72,7 +76,7 @@ export default function Home() {
                 name="email"
                 variant="outlined"
                 type="text"
-                label="Correo electrónico"
+                label={emailLabel}
               />
             </div>
             <div className={classes.formElement}>
