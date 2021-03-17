@@ -2,8 +2,7 @@ import SafeConduct from "client/components/SafeConduct"
 import pdf from "html-pdf"
 import { GetServerSideProps } from "next"
 import { renderToStaticMarkup } from "react-dom/server"
-import { render } from "utils/testUtils"
-import { parseQueryParameters, parseUsernameToPdfName } from "utils/utils"
+import { parseQueryParameters } from "utils/utils"
 
 export const getServerSideProps: GetServerSideProps = async ({
   req,
@@ -11,8 +10,10 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
 }) => {
   const user = {
-    name: parseQueryParameters(query.name),
-    identityDocument: parseQueryParameters(query.identityDocument),
+    name: decodeURIComponent(parseQueryParameters(query.name)),
+    identityDocument: decodeURIComponent(
+      parseQueryParameters(query.identityDocument)
+    ),
   }
   const htmlSafeConduct = renderToStaticMarkup(
     <SafeConduct name={user.name} identityDocument={user.identityDocument} />
@@ -32,14 +33,6 @@ export const getServerSideProps: GetServerSideProps = async ({
         }
       }
 
-      const pdfName = parseUsernameToPdfName(user.name)
-      res.setHeader(
-        "content-disposition",
-        `attachment; filename="${pdfName}.pdf"`
-      )
-
-      res.setHeader("content-type", "application/pdf")
-
       res.end(buffer)
     })
   return {
@@ -48,7 +41,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }
 
 export default function SafeConductPage(props: any) {
-  render(
+  return (
     <div>
       {props.error && <p>Ha ocurrido un error: {props.error.message}</p>}
     </div>

@@ -38,5 +38,8 @@
     "prettier-plugin-organize-imports": "^1.1.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
+  },
+  "browser": {
+    "html-pdf": false
   }
 }

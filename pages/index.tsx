@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
-import { Formik } from "formik"
+import { Field, Formik } from "formik"
 import moment from "moment"
 import { useState } from "react"
 import { AppEvent } from "utils/types"
@@ -59,20 +59,33 @@ export default function Home() {
           name: "",
           identityDocument: "",
           email: "",
+          generationRoute: "client",
         }}
         validationSchema={safeConductValidator}
         onSubmit={async (values, { setSubmitting }) => {
           setSuccessMessage(undefined)
-          const res = await fetch("/api/safeConduct", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(values),
-          })
-          if (res.status == 200) {
+          if (values.generationRoute == "api") {
+            window.open(
+              `/safe-conduct/${encodeURIComponent(
+                values.name
+              )}?identityDocument=${encodeURIComponent(
+                values.identityDocument
+              )}`,
+              "_blank"
+            )
             setSuccessMessage(successPdfGenerationMessage)
-            window.open(URL.createObjectURL(await res.blob()), "_blank")
+          } else {
+            const res = await fetch("/api/safeConduct", {
+              method: "POST",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify(values),
+            })
+            if (res.status == 200) {
+              setSuccessMessage(successPdfGenerationMessage)
+              window.open(URL.createObjectURL(await res.blob()), "_blank")
+            }
           }
           setSubmitting(false)
         }}
@@ -102,6 +115,12 @@ export default function Home() {
                 type="text"
                 label={emailLabel}
               />
+            </div>
+            <div className={classes.formElement}>
+              <Field as="select" name="generationRoute">
+                <option value="api">API</option>
+                <option value="client">Client</option>
+              </Field>
             </div>
             <div className={classes.formElement}>
               <Button
