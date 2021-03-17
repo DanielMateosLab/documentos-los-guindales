@@ -40,7 +40,7 @@ export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
 export const submitButtonText = "Generar salvoconducto"
 export const successPdfGenerationMessage =
-  "El salvoconducto se ha creado con éxito. En breve se iniciará su descarga."
+  "El salvoconducto se ha creado con éxito. En breve se abrirá en una nueva pestaña."
 
 export default function Home() {
   const classes = useStyles()
