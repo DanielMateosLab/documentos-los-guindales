@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
-import { Field, Formik } from "formik"
+import { Formik } from "formik"
 import moment from "moment"
 import { useState } from "react"
 import { AppEvent } from "utils/types"
@@ -101,20 +101,14 @@ export default function Home() {
                 label={identityDocumentLabel}
               />
             </div>
-            <div className={classes.formElement}>
+            {/* <div className={classes.formElement}>
               <FormikTextInput
                 name="email"
                 variant="outlined"
                 type="text"
                 label={emailLabel}
               />
-            </div>
-            <div className={classes.formElement}>
-              <Field as="select" name="generationRoute">
-                <option value="api">API</option>
-                <option value="client">Client</option>
-              </Field>
-            </div>
+            </div> */}
             <div className={classes.formElement}>
               <Button
                 variant="contained"
