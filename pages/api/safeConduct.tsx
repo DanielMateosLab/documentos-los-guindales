@@ -34,10 +34,6 @@ export const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
       }
 
       const pdfName = parseUsernameToPdfName(user.name)
-      res.setHeader(
-        "content-disposition",
-        `attachment; filename="${pdfName}.pdf"`
-      )
 
       res.setHeader("content-type", "application/pdf")
 
