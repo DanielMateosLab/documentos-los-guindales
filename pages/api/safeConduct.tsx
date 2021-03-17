@@ -2,8 +2,9 @@ import SafeConduct from "client/components/SafeConduct"
 import pdf from "html-pdf"
 import { NextApiHandler } from "next"
 import { renderToStaticMarkup } from "react-dom/server"
+import { SafeConductPostResponse } from "utils/types"
 
-const handler: NextApiHandler = (req, res) => {
+const handler: NextApiHandler<SafeConductPostResponse> = (req, res) => {
   const htmlSafeConduct = renderToStaticMarkup(
     <SafeConduct
       name={req.body.name}

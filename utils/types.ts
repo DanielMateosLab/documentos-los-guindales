@@ -5,3 +5,17 @@ export interface AppEvent {
   startDate: Moment
   endDate: Moment
 }
+
+type SuccessResponse<Payload = {}> = {
+  status: "success"
+} & Payload
+
+export type ErrorResponse<Payload = undefined> = {
+  status: "error"
+  name: string
+  message: string
+  /** Used in field validation or to give more details */
+  payload?: Payload
+}
+
+export type SafeConductPostResponse = ErrorResponse | SuccessResponse
