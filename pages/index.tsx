@@ -71,8 +71,8 @@ export default function Home() {
             body: JSON.stringify(values),
           })
           if (res.status == 200) {
-            console.log("reached")
             setSuccessMessage(successPdfGenerationMessage)
+            window.open(URL.createObjectURL(await res.blob()), "_blank")
           }
           setSubmitting(false)
         }}
