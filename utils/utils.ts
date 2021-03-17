@@ -5,3 +5,6 @@ export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
 
 export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
+
+export const parseQueryParameters = (parameter: any) =>
+  typeof parameter == "string" ? parameter : ""
