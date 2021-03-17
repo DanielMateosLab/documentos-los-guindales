@@ -1,3 +1,4 @@
+import type '@material-ui/lab/themeAugmentation'
 import { brown, green } from "@material-ui/core/colors"
 import { createMuiTheme } from "@material-ui/core/styles"
 
