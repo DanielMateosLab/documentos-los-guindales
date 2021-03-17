@@ -1,7 +1,15 @@
-import { Button, Container, makeStyles, Typography } from "@material-ui/core"
+import {
+  Button,
+  Collapse,
+  Container,
+  makeStyles,
+  Typography,
+} from "@material-ui/core"
+import { Alert } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
+import { useState } from "react"
 import { AppEvent } from "utils/types"
 import { formatDate } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
@@ -31,9 +39,12 @@ export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
 export const submitButtonText = "Generar salvoconducto"
+export const successPdfGenerationMessage =
+  "El salvoconducto se ha creado con éxito. En breve se iniciará su descarga."
 
 export default function Home() {
   const classes = useStyles()
+  const [successMessage, setSuccessMessage] = useState<string | undefined>()
 
   return (
     <Container className={classes.container}>
@@ -51,13 +62,18 @@ export default function Home() {
         }}
         validationSchema={safeConductValidator}
         onSubmit={async (values, { setSubmitting }) => {
-          await fetch("/api/safeConduct", {
+          setSuccessMessage(undefined)
+          const res = await fetch("/api/safeConduct", {
             method: "POST",
             headers: {
               "Content-type": "application/json",
             },
             body: JSON.stringify(values),
           })
+          if (res.status == 200) {
+            console.log("reached")
+            setSuccessMessage(successPdfGenerationMessage)
+          }
           setSubmitting(false)
         }}
       >
@@ -97,6 +113,11 @@ export default function Home() {
                 {submitButtonText}
               </Button>
             </div>
+            <Collapse in={!!successMessage}>
+              <div className={classes.formElement}>
+                <Alert severity="success"> {successMessage} </Alert>
+              </div>
+            </Collapse>
           </form>
         )}
       </Formik>

@@ -1,9 +1,11 @@
+import userEvent from "@testing-library/user-event"
 import Home, {
   emailLabel,
   event,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
+  successPdfGenerationMessage,
 } from "pages"
 import { render, screen } from "utils/testUtils"
 import { formatDate } from "utils/utils"
@@ -39,29 +41,47 @@ describe("index", () => {
       expect(endDateElement).toBeDefined()
     })
     describe("form", () => {
-      it("should have a name input", () => {
-        const nameInput = screen.getByLabelText(nameLabel)
+      let nameInput: HTMLElement,
+        identityDocumentInput: HTMLElement,
+        emailInput: HTMLElement,
+        submitButton: HTMLElement
 
-        expect(nameInput).toBeInTheDocument()
+      it("should have a name input", () => {
+        nameInput = screen.getByLabelText(nameLabel)
+
+        expect(nameInput).toBeVisible()
       })
       it("should have a identityDocument input", () => {
-        const identityDocumentInput = screen.getByLabelText(
-          identityDocumentLabel
-        )
+        identityDocumentInput = screen.getByLabelText(identityDocumentLabel)
 
-        expect(identityDocumentInput).toBeInTheDocument()
+        expect(identityDocumentInput).toBeVisible()
       })
       it("should have an email input", () => {
-        const emailInput = screen.getByLabelText(emailLabel)
+        emailInput = screen.getByLabelText(emailLabel)
 
-        expect(emailInput).toBeInTheDocument()
+        expect(emailInput).toBeVisible()
       })
       it("should have a submit button", () => {
-        const submitButton = screen.getByRole("button", {
+        submitButton = screen.getByRole("button", {
           name: submitButtonText,
         })
 
-        expect(submitButton).toBeInTheDocument()
+        expect(submitButton).toBeVisible()
+      })
+
+      describe("submission handler", () => {
+        it("should set a success message if response is ok", async () => {
+          fetchMock.once("", { status: 200 })
+
+          userEvent.type(nameInput, "aaaaa")
+          userEvent.type(identityDocumentInput, "aaaaa")
+          userEvent.click(submitButton)
+
+          const successMessage = await screen.findByText(
+            successPdfGenerationMessage
+          )
+          expect(successMessage).toBeVisible()
+        })
       })
     })
   })
