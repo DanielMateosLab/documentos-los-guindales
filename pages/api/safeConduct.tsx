@@ -1,17 +1,10 @@
-import SafeConduct from "client/components/SafeConduct"
-import pdf from "html-pdf"
 import { NextApiHandler } from "next"
-import { renderToStaticMarkup } from "react-dom/server"
+import puppeteer from "puppeteer"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
-import { SafeConductPostResponse } from "utils/types"
-import { parseUsernameToPdfName } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
-export const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
-  req,
-  res
-) => {
+export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
   //TODO: create a function to encapsulate this logic and its tests and put it in your module
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
@@ -19,26 +12,29 @@ export const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
     abortEarly: false,
   })
 
-  const htmlSafeConduct = renderToStaticMarkup(
-    <SafeConduct name={user.name} identityDocument={user.identityDocument} />
+  const browser = await puppeteer.launch()
+  const page = await browser.newPage()
+  await page.goto(
+    "http://localhost:3000" +
+      `/safe-conduct/${encodeURIComponent(
+        user.name
+      )}?identityDocument=${encodeURIComponent(user.identityDocument)}`,
+    { waitUntil: "networkidle2" }
   )
+  const pdf = await page.pdf({
+    format: "a4",
+    margin: {
+      top: "1.9cm",
+      left: "1.9cm",
+      right: "1.32cm",
+      bottom: "3.67cm",
+    },
+  })
+  await browser.close()
 
-  pdf
-    .create(htmlSafeConduct, {
-      format: "A4",
-      orientation: "portrait",
-    })
-    .toBuffer((error, buffer) => {
-      if (error) {
-        throw error
-      }
+  res.setHeader("content-type", "application/pdf")
 
-      const pdfName = parseUsernameToPdfName(user.name)
-
-      res.setHeader("content-type", "application/pdf")
-
-      return res.send(buffer)
-    })
+  return res.send(pdf)
 }
 
 export default catchErrors(safeConductHandler)
