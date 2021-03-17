@@ -6,19 +6,21 @@ import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { SafeConductPostResponse } from "utils/types"
 import { parseUsernameToPdfName } from "utils/utils"
+import { safeConductValidator } from "utils/validation"
 
-const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
+export const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
   req,
   res
 ) => {
   //TODO: create a function to encapsulate this logic and its tests and put it in your module
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
+  const user = safeConductValidator.validateSync(req.body, {
+    abortEarly: false,
+  })
+
   const htmlSafeConduct = renderToStaticMarkup(
-    <SafeConduct
-      name={req.body.name}
-      identityDocument={req.body.identityDocument}
-    />
+    <SafeConduct name={user.name} identityDocument={user.identityDocument} />
   )
 
   pdf
@@ -31,7 +33,7 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
         throw error
       }
 
-      const pdfName = parseUsernameToPdfName(req.body.name)
+      const pdfName = parseUsernameToPdfName(user.name)
       res.setHeader(
         "content-disposition",
         `attachment; filename="${pdfName}.pdf"`

@@ -4,9 +4,10 @@ import {
   createResponse,
   RequestOptions,
 } from "node-mocks-http"
-import safeConductHandler from "pages/api/safeConduct"
+import { safeConductHandler } from "pages/api/safeConduct"
 import { MethodNotAllowedError } from "utils/errors"
 import { parseUsernameToPdfName } from "utils/utils"
+import { safeConductValidator } from "utils/validation"
 
 jest.mock("html-pdf", () => ({
   create: () => ({
@@ -24,12 +25,14 @@ describe("/api/safeConduct", () => {
         method: "POST",
         body: {
           name: "aaaa aaaa",
+          identityDocument: "aaaaaa",
+          email: "aaaaa@aaaa.aaa",
         },
       })
       res = createResponse()
     })
 
-    it("should throw a MethodNotAllowedError with get, put, patch or del", async () => {
+    it("should throw a MethodNotAllowedError with get, put, patch or del", () => {
       const notAllowedMethods: RequestOptions["method"][] = [
         "GET",
         "PUT",
@@ -45,11 +48,18 @@ describe("/api/safeConduct", () => {
         })
 
         try {
-          await safeConductHandler(req, res)
+          safeConductHandler(req, res)
         } catch (e) {
           expect(e).toBeInstanceOf(MethodNotAllowedError)
         }
       }
+    })
+    it("should validate the req.body", () => {
+      const validatorSpy = jest.spyOn(safeConductValidator, "validateSync")
+
+      safeConductHandler(req, res)
+
+      expect(validatorSpy).toHaveBeenCalled()
     })
     it("should throw if the buffer is an error", () => {
       const error = "mockBufferError"
