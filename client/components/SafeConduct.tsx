@@ -28,7 +28,12 @@ export default function SafeConduct(props: Props) {
 
   return (
     <Container>
-      <Typography align="center" variant="h5" className={styles.title}>
+      <Typography
+        align="center"
+        variant="h5"
+        component="h1"
+        className={styles.title}
+      >
         Declaración responsable para facilitar la movilidad relacionada con
         actividades de formación
       </Typography>
