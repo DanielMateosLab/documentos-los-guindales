@@ -1,8 +1,16 @@
 import { NextApiHandler } from "next"
-import puppeteer from "puppeteer"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { safeConductValidator } from "utils/validation"
+
+let chrome = {}
+let puppeteer: any
+if (process.env.VERCEL) {
+  chrome = require("chrome-aws-lambda")
+  puppeteer = require("puppeteer-core")
+} else {
+  puppeteer = require("puppeteer")
+}
 
 export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
   //TODO: create a function to encapsulate this logic and its tests and put it in your module
