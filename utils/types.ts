@@ -18,4 +18,4 @@ export type ErrorResponse<Payload = undefined> = {
   payload?: Payload
 }
 
-export type SafeConductPostResponse = ErrorResponse | SuccessResponse
+export type SafeConductPostResponse = ErrorResponse | Buffer

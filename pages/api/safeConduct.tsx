@@ -4,6 +4,7 @@ import { NextApiHandler } from "next"
 import { renderToStaticMarkup } from "react-dom/server"
 import { MethodNotAllowedError } from "utils/errors"
 import { SafeConductPostResponse } from "utils/types"
+import { parseUsernameToPdfName } from "utils/utils"
 
 const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
   req,
@@ -18,6 +19,7 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
       identityDocument={req.body.identityDocument}
     />
   )
+
   const pdfSafeConduct = pdf
     .create(htmlSafeConduct, {
       format: "A4",
@@ -27,6 +29,16 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
       if (error) {
         throw error
       }
+
+      const pdfName = parseUsernameToPdfName(req.body.name)
+      res.setHeader(
+        "content-disposition",
+        `attachment; filename="${pdfName}.pdf"`
+      )
+
+      res.setHeader("content-type", "application/pdf")
+
+      return res.send(buffer)
     })
 }
 
