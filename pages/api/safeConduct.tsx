@@ -4,7 +4,10 @@ import { NextApiHandler } from "next"
 import { renderToStaticMarkup } from "react-dom/server"
 import { SafeConductPostResponse } from "utils/types"
 
-const handler: NextApiHandler<SafeConductPostResponse> = (req, res) => {
+const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
+  req,
+  res
+) => {
   const htmlSafeConduct = renderToStaticMarkup(
     <SafeConduct
       name={req.body.name}
@@ -18,9 +21,9 @@ const handler: NextApiHandler<SafeConductPostResponse> = (req, res) => {
     })
     .toBuffer((error, buffer) => {
       if (error) {
-        console.error(error)
+        throw error
       }
     })
 }
 
-export default handler
+export default safeConductHandler
