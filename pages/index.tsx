@@ -59,12 +59,12 @@ export default function Home() {
           name: "",
           identityDocument: "",
           email: "",
-          generationRoute: "client",
+          generationRoute: "api",
         }}
         validationSchema={safeConductValidator}
         onSubmit={async (values, { setSubmitting }) => {
           setSuccessMessage(undefined)
-          if (values.generationRoute == "api") {
+          if (values.generationRoute == "client") {
             window.open(
               `/safe-conduct/${encodeURIComponent(
                 values.name
