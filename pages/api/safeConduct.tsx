@@ -2,6 +2,7 @@ import SafeConduct from "client/components/SafeConduct"
 import pdf from "html-pdf"
 import { NextApiHandler } from "next"
 import { renderToStaticMarkup } from "react-dom/server"
+import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { SafeConductPostResponse } from "utils/types"
 import { parseUsernameToPdfName } from "utils/utils"
@@ -42,4 +43,4 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
     })
 }
 
-export default safeConductHandler
+export default catchErrors(safeConductHandler)
