@@ -41,10 +41,13 @@ export const emailLabel = "Correo electrónico"
 export const submitButtonText = "Generar salvoconducto"
 export const successPdfGenerationMessage =
   "El salvoconducto se ha creado con éxito. En breve se abrirá en una nueva pestaña."
+export const failPdfGenerationMessage =
+  "Ha habido un problema generando el salvoconducto. Vuelve a intentarlo más tarde o contacta con Dani."
 
 export default function Home() {
   const classes = useStyles()
   const [successMessage, setSuccessMessage] = useState<string | undefined>()
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
 
   return (
     <Container className={classes.container}>
@@ -59,33 +62,23 @@ export default function Home() {
           name: "",
           identityDocument: "",
           email: "",
-          generationRoute: "api",
         }}
         validationSchema={safeConductValidator}
         onSubmit={async (values, { setSubmitting }) => {
           setSuccessMessage(undefined)
-          if (values.generationRoute == "client") {
-            window.open(
-              `/safe-conduct/${encodeURIComponent(
-                values.name
-              )}?identityDocument=${encodeURIComponent(
-                values.identityDocument
-              )}`,
-              "_blank"
-            )
+          setErrorMessage(undefined)
+          const res = await fetch("/api/safeConduct", {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify(values),
+          })
+          if (res.ok) {
             setSuccessMessage(successPdfGenerationMessage)
+            window.open(URL.createObjectURL(await res.blob()), "_blank")
           } else {
-            const res = await fetch("/api/safeConduct", {
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
-              },
-              body: JSON.stringify(values),
-            })
-            if (res.status == 200) {
-              setSuccessMessage(successPdfGenerationMessage)
-              window.open(URL.createObjectURL(await res.blob()), "_blank")
-            }
+            setErrorMessage(failPdfGenerationMessage)
           }
           setSubmitting(false)
         }}
@@ -135,6 +128,11 @@ export default function Home() {
             <Collapse in={!!successMessage}>
               <div className={classes.formElement}>
                 <Alert severity="success"> {successMessage} </Alert>
+              </div>
+            </Collapse>
+            <Collapse in={!!errorMessage}>
+              <div className={classes.formElement}>
+                <Alert severity="error"> {errorMessage} </Alert>
               </div>
             </Collapse>
           </form>
