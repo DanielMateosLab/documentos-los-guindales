@@ -10,7 +10,7 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
   req,
   res
 ) => {
-  //TODO: craete a function to encapsulate this logic and its tests and put it in your module
+  //TODO: create a function to encapsulate this logic and its tests and put it in your module
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
   const htmlSafeConduct = renderToStaticMarkup(
@@ -20,7 +20,7 @@ const safeConductHandler: NextApiHandler<SafeConductPostResponse> = (
     />
   )
 
-  const pdfSafeConduct = pdf
+  pdf
     .create(htmlSafeConduct, {
       format: "A4",
       orientation: "portrait",
