@@ -8,7 +8,7 @@ import Home, {
   successPdfGenerationMessage,
 } from "pages"
 import { render, screen, waitFor } from "utils/testUtils"
-import { formatDate } from "utils/utils"
+import { formatDate, getPathname } from "utils/utils"
 
 global.open = jest.fn()
 
@@ -70,6 +70,8 @@ describe("index", () => {
     describe("submission handler", () => {
       const name = "aaaaaa"
       const identityDocument = "bbbbbb"
+      const pathname = getPathname({ name, identityDocument }, "pdf")
+
       const fillFormAndSubmit = () => {
         userEvent.type(screen.getByLabelText(nameLabel), name)
         userEvent.type(
@@ -78,17 +80,12 @@ describe("index", () => {
         )
         userEvent.click(screen.getByText(submitButtonText))
       }
+
       it("should open the pdf creation page in a new tab", async () => {
         fillFormAndSubmit()
 
         await waitFor(() => {
-          expect(global.open).toHaveBeenCalledWith(
-            "/pdf-safe-conduct/" +
-              encodeURIComponent(name) +
-              "?identityDocument=" +
-              encodeURIComponent(identityDocument),
-            "_blank"
-          )
+          expect(global.open).toHaveBeenCalledWith(pathname, "_blank")
         })
       })
       it("should set a success message after clicking the submit button", async () => {
@@ -99,9 +96,13 @@ describe("index", () => {
         )
         expect(successMessage).toBeVisible()
       })
-      it.todo(
-        "should have a success message with a link to the pdf page creation"
-      )
+      test("the success message should have a link to the pdf creation page", async () => {
+        fillFormAndSubmit()
+
+        const link = await screen.findByRole("link")
+        expect(link).toBeVisible()
+        expect(link).toHaveProperty("href", "http://localhost" + pathname)
+      })
     })
   })
 })

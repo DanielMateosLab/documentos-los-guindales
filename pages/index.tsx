@@ -2,10 +2,11 @@ import {
   Button,
   Collapse,
   Container,
+  Link,
   makeStyles,
   Typography,
 } from "@material-ui/core"
-import { Alert } from "@material-ui/lab"
+import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
@@ -41,7 +42,7 @@ export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
 export const submitButtonText = "Generar salvoconducto"
 export const successPdfGenerationMessage =
-  "El salvoconducto se ha creado con éxito. En breve se abrirá en una nueva pestaña."
+  "El salvoconducto se abrirá en una nueva pestaña"
 export const failPdfGenerationMessage =
   "Ha habido un problema generando el salvoconducto. Vuelve a intentarlo más tarde o contacta con Dani."
 
@@ -49,6 +50,7 @@ export default function Home() {
   const classes = useStyles()
   const [successMessage, setSuccessMessage] = useState<string | undefined>()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
+  const [pathname, setPathname] = useState<string | undefined>()
   const router = useRouter()
 
   return (
@@ -70,14 +72,16 @@ export default function Home() {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
 
-          const pathname = getPathname(
+          const newPathname = getPathname(
             {
               name: values.name,
               identityDocument: values.identityDocument,
             },
             "pdf"
           )
-          window.open(pathname, "_blank")
+          setPathname(newPathname)
+
+          window.open(newPathname, "_blank")
 
           setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
@@ -121,7 +125,14 @@ export default function Home() {
             </div>
             <Collapse in={!!successMessage}>
               <div className={classes.formElement}>
-                <Alert severity="success"> {successMessage} </Alert>
+                <Alert severity="success">
+                  <AlertTitle>{successMessage}</AlertTitle>
+                  Si no funciona,{" "}
+                  <Link href={pathname} target="_blank">
+                    pulsa aquí
+                  </Link>
+                  .
+                </Alert>
               </div>
             </Collapse>
             <Collapse in={!!errorMessage}>
