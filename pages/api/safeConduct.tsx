@@ -1,5 +1,5 @@
-import chromium from "chrome-aws-lambda"
 import { NextApiHandler } from "next"
+import { Browser } from "puppeteer-core"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { safeConductValidator } from "utils/validation"
@@ -12,16 +12,30 @@ export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
     abortEarly: false,
   })
 
-  const browser = await chromium.puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath,
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true,
-  })
+  let browser: Browser
+  let hostURL: string
+
+  if (process.env.VERCEL == undefined) {
+    const puppeteer = require("puppeteer")
+    browser = await puppeteer.launch()
+
+    hostURL = "http://localhost:3000"
+  } else {
+    const chromium = require("chrome-aws-lambda")
+    browser = await chromium.puppeteer.launch({
+      args: chromium.args,
+      defaultViewport: chromium.defaultViewport,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless,
+      ignoreHTTPSErrors: true,
+    })
+
+    hostURL = process.env.VERCEL_URL!
+  }
+
   const page = await browser.newPage()
   await page.goto(
-    "http://localhost:3000" +
+    hostURL +
       `/safe-conduct/${encodeURIComponent(
         user.name
       )}?identityDocument=${encodeURIComponent(user.identityDocument)}`,
