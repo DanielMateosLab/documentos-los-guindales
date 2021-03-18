@@ -8,11 +8,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
   res,
 }) => {
-  const user = extractUserFromQuery(query)
+  try {
+    const user = extractUserFromQuery(query)
 
-  const pdf = await generatePdf(user)
+    const pdf = await generatePdf(user)
 
-  res.end(pdf)
+    res.end(pdf)
+  } catch (e) {
+    console.error(e)
+  }
 
   return {
     props: {},
