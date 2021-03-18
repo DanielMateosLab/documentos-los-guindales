@@ -15,3 +15,6 @@ export const extractUserFromQuery = (query: any) => {
     identityDocument: parseQueryParameters(query.identityDocument),
   }
 }
+
+export const getHostURL = (): string =>
+  "http://" + (process.env.VERCEL_URL || "localhost:3000")

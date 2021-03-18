@@ -1,4 +1,5 @@
 import { Browser } from "puppeteer-core"
+import { getHostURL } from "utils/utils"
 
 interface User {
   name: string
@@ -6,13 +7,11 @@ interface User {
 }
 const generatePdf = async (user: User): Promise<Buffer> => {
   let browser: Browser
-  let hostURL: string
+  const hostURL = getHostURL()
 
   if (process.env.VERCEL == undefined) {
     const puppeteer = require("puppeteer")
     browser = await puppeteer.launch()
-
-    hostURL = "http://localhost:3000"
   } else {
     const chromium = require("chrome-aws-lambda")
     browser = await chromium.puppeteer.launch({
@@ -22,8 +21,6 @@ const generatePdf = async (user: User): Promise<Buffer> => {
       headless: chromium.headless,
       ignoreHTTPSErrors: true,
     })
-
-    hostURL = "http://" + process.env.VERCEL_URL!
   }
 
   const page = await browser.newPage()
