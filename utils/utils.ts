@@ -11,9 +11,7 @@ export const parseQueryParameters = (parameter: any) =>
 
 export const extractUserFromQuery = (query: any) => {
   return {
-    name: decodeURIComponent(parseQueryParameters(query.name)),
-    identityDocument: decodeURIComponent(
-      parseQueryParameters(query.identityDocument)
-    ),
+    name: parseQueryParameters(query.name),
+    identityDocument: parseQueryParameters(query.identityDocument),
   }
 }
