@@ -10,6 +10,7 @@ const catchErrors = (handler: NextApiHandler<any>) =>
     try {
       await handler(req, res)
     } catch (e) {
+      console.error(e)
       if (e instanceof ValidationError) {
         return res.status(400).json({
           status: "error",
