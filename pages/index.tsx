@@ -70,15 +70,15 @@ export default function Home() {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
 
-          router.push(
-            getPathname(
-              {
-                name: values.name,
-                identityDocument: values.identityDocument,
-              },
-              "pdf"
-            )
+          const pathname = getPathname(
+            {
+              name: values.name,
+              identityDocument: values.identityDocument,
+            },
+            "pdf"
           )
+          window.open(pathname, "_blank")
+
           setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
         }}

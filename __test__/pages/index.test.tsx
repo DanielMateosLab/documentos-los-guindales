@@ -7,8 +7,10 @@ import Home, {
   submitButtonText,
   successPdfGenerationMessage,
 } from "pages"
-import { mockPush, render, screen, waitFor } from "utils/testUtils"
+import { render, screen, waitFor } from "utils/testUtils"
 import { formatDate } from "utils/utils"
+
+global.open = jest.fn()
 
 describe("index", () => {
   beforeEach(() => {
@@ -40,67 +42,66 @@ describe("index", () => {
       expect(startDateElement).toBeDefined()
       expect(endDateElement).toBeDefined()
     })
-    describe("form", () => {
-      it("should have a name input", () => {
-        const nameInput = screen.getByLabelText(nameLabel)
+  })
+  describe("form", () => {
+    it("should have a name input", () => {
+      const nameInput = screen.getByLabelText(nameLabel)
 
-        expect(nameInput).toBeVisible()
+      expect(nameInput).toBeVisible()
+    })
+    it("should have a identityDocument input", () => {
+      const identityDocumentInput = screen.getByLabelText(identityDocumentLabel)
+
+      expect(identityDocumentInput).toBeVisible()
+    })
+    it.skip("should have an email input", () => {
+      const emailInput = screen.getByLabelText(emailLabel)
+
+      expect(emailInput).toBeVisible()
+    })
+    it("should have a submit button", () => {
+      const submitButton = screen.getByRole("button", {
+        name: submitButtonText,
       })
-      it("should have a identityDocument input", () => {
-        const identityDocumentInput = screen.getByLabelText(
-          identityDocumentLabel
+
+      expect(submitButton).toBeVisible()
+    })
+
+    describe("submission handler", () => {
+      const name = "aaaaaa"
+      const identityDocument = "bbbbbb"
+      const fillFormAndSubmit = () => {
+        userEvent.type(screen.getByLabelText(nameLabel), name)
+        userEvent.type(
+          screen.getByLabelText(identityDocumentLabel),
+          identityDocument
         )
+        userEvent.click(screen.getByText(submitButtonText))
+      }
+      it("should open the pdf creation page in a new tab", async () => {
+        fillFormAndSubmit()
 
-        expect(identityDocumentInput).toBeVisible()
-      })
-      it.skip("should have an email input", () => {
-        const emailInput = screen.getByLabelText(emailLabel)
-
-        expect(emailInput).toBeVisible()
-      })
-      it("should have a submit button", () => {
-        const submitButton = screen.getByRole("button", {
-          name: submitButtonText,
-        })
-
-        expect(submitButton).toBeVisible()
-      })
-
-      describe("submission handler", () => {
-        const name = "aaaaaa"
-        const identityDocument = "bbbbbb"
-        const fillFormAndSubmit = () => {
-          userEvent.type(screen.getByLabelText(nameLabel), name)
-          userEvent.type(
-            screen.getByLabelText(identityDocumentLabel),
-            identityDocument
+        await waitFor(() => {
+          expect(global.open).toHaveBeenCalledWith(
+            "/pdf-safe-conduct/" +
+              encodeURIComponent(name) +
+              "?identityDocument=" +
+              encodeURIComponent(identityDocument),
+            "_blank"
           )
-          userEvent.click(screen.getByText(submitButtonText))
-        }
-        it("should redirect the user to the pdf creation page", async () => {
-          fillFormAndSubmit()
-
-          await waitFor(() => {
-            expect(mockPush).toHaveBeenCalledWith(
-              "/pdf-safe-conduct/" +
-                encodeURIComponent(name) +
-                "?identityDocument=" +
-                encodeURIComponent(identityDocument)
-            )
-          })
         })
-        it("should set a success message after clicking the submit button", async () => {
-          fillFormAndSubmit()
+      })
+      it("should set a success message after clicking the submit button", async () => {
+        fillFormAndSubmit()
 
-          const successMessage = await screen.findByText(
-            successPdfGenerationMessage
-          )
-          expect(successMessage).toBeVisible()
-        })
-        it.todo(
-          "should have a success message with a link to the pdf page creation"
+        const successMessage = await screen.findByText(
+          successPdfGenerationMessage
         )
+        expect(successMessage).toBeVisible()
       })
+      it.todo(
+        "should have a success message with a link to the pdf page creation"
+      )
     })
   })
 })
