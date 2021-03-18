@@ -9,9 +9,10 @@ import { Alert } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import { AppEvent } from "utils/types"
-import { formatDate } from "utils/utils"
+import { formatDate, getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +49,7 @@ export default function Home() {
   const classes = useStyles()
   const [successMessage, setSuccessMessage] = useState<string | undefined>()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
+  const router = useRouter()
 
   return (
     <Container className={classes.container}>
@@ -64,22 +66,20 @@ export default function Home() {
           email: "",
         }}
         validationSchema={safeConductValidator}
-        onSubmit={async (values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting }) => {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
-          const res = await fetch("/api/safeConduct", {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json",
-            },
-            body: JSON.stringify(values),
-          })
-          if (res.ok) {
-            setSuccessMessage(successPdfGenerationMessage)
-            window.open(URL.createObjectURL(await res.blob()), "_blank")
-          } else {
-            setErrorMessage(failPdfGenerationMessage)
-          }
+
+          router.push(
+            getPathname(
+              {
+                name: values.name,
+                identityDocument: values.identityDocument,
+              },
+              "pdf"
+            )
+          )
+          setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
         }}
       >

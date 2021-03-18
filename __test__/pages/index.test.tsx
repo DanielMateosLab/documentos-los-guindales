@@ -2,13 +2,12 @@ import userEvent from "@testing-library/user-event"
 import Home, {
   emailLabel,
   event,
-  failPdfGenerationMessage,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
   successPdfGenerationMessage,
 } from "pages"
-import { render, screen } from "utils/testUtils"
+import { mockPush, render, screen, waitFor } from "utils/testUtils"
 import { formatDate } from "utils/utils"
 
 describe("index", () => {
@@ -68,14 +67,29 @@ describe("index", () => {
       })
 
       describe("submission handler", () => {
+        const name = "aaaaaa"
+        const identityDocument = "bbbbbb"
         const fillFormAndSubmit = () => {
-          userEvent.type(screen.getByLabelText(nameLabel), "aaaaa")
-          userEvent.type(screen.getByLabelText(identityDocumentLabel), "aaaaa")
+          userEvent.type(screen.getByLabelText(nameLabel), name)
+          userEvent.type(
+            screen.getByLabelText(identityDocumentLabel),
+            identityDocument
+          )
           userEvent.click(screen.getByText(submitButtonText))
         }
-        it("should set a success message if response is ok", async () => {
-          fetchMock.once("", { status: 200 })
+        it("should redirect the user to the pdf creation page", async () => {
+          fillFormAndSubmit()
 
+          await waitFor(() => {
+            expect(mockPush).toHaveBeenCalledWith(
+              "/pdf-safe-conduct/" +
+                encodeURIComponent(name) +
+                "?identityDocument=" +
+                encodeURIComponent(identityDocument)
+            )
+          })
+        })
+        it("should set a success message after clicking the submit button", async () => {
           fillFormAndSubmit()
 
           const successMessage = await screen.findByText(
@@ -83,14 +97,9 @@ describe("index", () => {
           )
           expect(successMessage).toBeVisible()
         })
-        it("should set an error message if response fails", async () => {
-          fetchMock.once("", { status: 500 })
-
-          fillFormAndSubmit()
-
-          const errorMessage = await screen.findByText(failPdfGenerationMessage)
-          expect(errorMessage).toBeVisible()
-        })
+        it.todo(
+          "should have a success message with a link to the pdf page creation"
+        )
       })
     })
   })

@@ -1,13 +1,11 @@
 import { Browser } from "puppeteer-core"
-import { getHostURL } from "utils/utils"
+import { GeneratePdfData } from "utils/types"
+import { getHostURL, getPathname } from "utils/utils"
 
-interface User {
-  name: string
-  identityDocument: string
-}
-const generatePdf = async (user: User): Promise<Buffer> => {
+const generatePdf = async (user: GeneratePdfData): Promise<Buffer> => {
   let browser: Browser
   const hostURL = getHostURL()
+  const pathname = getPathname(user)
 
   if (process.env.VERCEL == undefined) {
     const puppeteer = require("puppeteer")
@@ -24,13 +22,7 @@ const generatePdf = async (user: User): Promise<Buffer> => {
   }
 
   const page = await browser.newPage()
-  await page.goto(
-    hostURL +
-      `/safe-conduct/${encodeURIComponent(
-        user.name
-      )}?identityDocument=${encodeURIComponent(user.identityDocument)}`,
-    { waitUntil: "networkidle2" }
-  )
+  await page.goto(hostURL + pathname, { waitUntil: "networkidle2" })
   const pdf = await page.pdf({
     format: "a4",
     margin: {

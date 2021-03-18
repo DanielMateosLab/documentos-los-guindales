@@ -19,3 +19,8 @@ export type ErrorResponse<Payload = undefined> = {
 }
 
 export type SafeConductPostResponse = ErrorResponse | Buffer
+
+export interface GeneratePdfData {
+  name: string
+  identityDocument: string
+}
