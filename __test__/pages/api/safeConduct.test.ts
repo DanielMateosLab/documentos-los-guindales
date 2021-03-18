@@ -6,33 +6,35 @@ import {
 } from "node-mocks-http"
 import { safeConductHandler } from "pages/api/safeConduct"
 import { MethodNotAllowedError } from "utils/errors"
-import { parseUsernameToPdfName } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
-
-jest.mock("html-pdf", () => ({
-  create: () => ({
-    toBuffer: mockToBuffer,
-  }),
-}))
-const mockToBuffer = jest.fn()
 
 describe("/api/safeConduct", () => {
   describe("POST", () => {
     let req: any, res: any
 
+    const user = {
+      name: "aaaa aaaa",
+      identityDocument: "aaaaaa",
+      email: "aaaaa@aaaa.aaa",
+    }
+    const mockBuffer = Buffer.from("a")
+
+    const validatorSpy = jest
+      .spyOn(safeConductValidator, "validate")
+      .mockImplementation(async () => user as any)
+    const generatePdfSpy = jest
+      .spyOn(require("server/generatePdf"), "default")
+      .mockImplementation(async () => mockBuffer)
+
     beforeEach(() => {
       req = createRequest({
         method: "POST",
-        body: {
-          name: "aaaa aaaa",
-          identityDocument: "aaaaaa",
-          email: "aaaaa@aaaa.aaa",
-        },
+        body: user,
       })
       res = createResponse()
     })
 
-    it("should throw a MethodNotAllowedError with get, put, patch or del", () => {
+    it("should throw a MethodNotAllowedError with get, put, patch or del", async () => {
       const notAllowedMethods: RequestOptions["method"][] = [
         "GET",
         "PUT",
@@ -48,54 +50,40 @@ describe("/api/safeConduct", () => {
         })
 
         try {
-          safeConductHandler(req, res)
+          await safeConductHandler(req, res)
         } catch (e) {
           expect(e).toBeInstanceOf(MethodNotAllowedError)
         }
       }
     })
-    it("should validate the req.body", () => {
-      const validatorSpy = jest.spyOn(safeConductValidator, "validateSync")
-
-      safeConductHandler(req, res)
+    it("should validate the req.body", async () => {
+      await safeConductHandler(req, res)
 
       expect(validatorSpy).toHaveBeenCalled()
     })
-    it("should throw if the buffer is an error", () => {
-      const error = "mockBufferError"
-      mockToBuffer.mockImplementationOnce((cb) => cb(error))
+    it("should generate the pdf", async () => {
+      await safeConductHandler(req, res)
 
-      expect(() => safeConductHandler(req, res)).toThrowError(error)
+      const { email, ...userData } = user
+
+      expect(generatePdfSpy).toHaveBeenCalledWith(userData)
     })
-    describe("buffer returned", () => {
-      const mockBuffer = Buffer.from("mockBuffer")
+    it("should set the proper headers", async () => {
+      const setHeadersSpy = jest.spyOn(res, "setHeader")
 
-      beforeEach(() => {
-        mockToBuffer.mockImplementationOnce((cb) => cb(undefined, mockBuffer))
-      })
+      await safeConductHandler(req, res)
 
-      it("should set the proper headers", () => {
-        const setHeadersSpy = jest.spyOn(res, "setHeader")
-        const pdfName = parseUsernameToPdfName(req.body.name)
+      expect(setHeadersSpy).toHaveBeenCalledWith(
+        "content-type",
+        "application/pdf"
+      )
+    })
+    it("should send the pdf buffer", async () => {
+      const sendSpy = jest.spyOn(res, "send")
 
-        safeConductHandler(req, res)
+      await safeConductHandler(req, res)
 
-        expect(setHeadersSpy.mock.calls[0]).toEqual([
-          "content-disposition",
-          `attachment; filename="${pdfName}.pdf"`,
-        ])
-        expect(setHeadersSpy.mock.calls[1]).toEqual([
-          "content-type",
-          "application/pdf",
-        ])
-      })
-      it("should send the pdf buffer", () => {
-        const sendSpy = jest.spyOn(res, "send")
-
-        safeConductHandler(req, res)
-
-        expect(sendSpy).toHaveBeenCalledWith(mockBuffer)
-      })
+      expect(sendSpy).toHaveBeenCalledWith(mockBuffer)
     })
   })
 })
