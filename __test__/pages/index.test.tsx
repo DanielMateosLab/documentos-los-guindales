@@ -56,7 +56,7 @@ describe("index", () => {
 
         expect(identityDocumentInput).toBeVisible()
       })
-      it("should have an email input", () => {
+      it.skip("should have an email input", () => {
         emailInput = screen.getByLabelText(emailLabel)
 
         expect(emailInput).toBeVisible()
