@@ -9,6 +9,9 @@ describe("pdf safe conduct page", () => {
     }
     const context: any = {
       query: user,
+      res: {
+        end: jest.fn(),
+      },
     }
     const mockBuffer = Buffer.from("a")
     const generatePdfSpy = jest
@@ -28,6 +31,16 @@ describe("pdf safe conduct page", () => {
       await getServerSideProps(context)
 
       expect(generatePdfSpy).toHaveBeenCalledWith(user)
+    })
+    it("should call res.end with the pdf buffer", async () => {
+      await getServerSideProps(context)
+
+      expect(context.res.end).toHaveBeenCalledWith(mockBuffer)
+    })
+    it("should return empty props in an object", async () => {
+      const returnValue = await getServerSideProps(context)
+
+      expect(returnValue).toEqual({ props: {} })
     })
   })
 })

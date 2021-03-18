@@ -4,12 +4,15 @@ import { useEffect } from "react"
 import generatePdf from "server/generatePdf"
 import { extractUserFromQuery } from "utils/utils"
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = extractUserFromQuery(context.query)
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  res,
+}) => {
+  const user = extractUserFromQuery(query)
 
   const pdf = await generatePdf(user)
-  // Set headers in nextjs config file
-  // End the response with the pdf
+
+  res.end(pdf)
 
   return {
     props: {},
