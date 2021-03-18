@@ -30,7 +30,7 @@ export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
       ignoreHTTPSErrors: true,
     })
 
-    hostURL = process.env.VERCEL_URL!
+    hostURL = "http://" + process.env.VERCEL_URL!
   }
 
   const page = await browser.newPage()
