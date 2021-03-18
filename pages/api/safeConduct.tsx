@@ -1,16 +1,8 @@
+import chromium from "chrome-aws-lambda"
 import { NextApiHandler } from "next"
 import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { safeConductValidator } from "utils/validation"
-
-let chrome = {}
-let puppeteer: any
-if (process.env.VERCEL) {
-  chrome = require("chrome-aws-lambda")
-  puppeteer = require("puppeteer-core")
-} else {
-  puppeteer = require("puppeteer")
-}
 
 export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
   //TODO: create a function to encapsulate this logic and its tests and put it in your module
@@ -20,7 +12,13 @@ export const safeConductHandler: NextApiHandler<any> = async (req, res) => {
     abortEarly: false,
   })
 
-  const browser = await puppeteer.launch()
+  const browser = await chromium.puppeteer.launch({
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath,
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
+  })
   const page = await browser.newPage()
   await page.goto(
     "http://localhost:3000" +
