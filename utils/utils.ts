@@ -8,3 +8,12 @@ export const parseUsernameToPdfName = (name: string) =>
 
 export const parseQueryParameters = (parameter: any) =>
   typeof parameter == "string" ? parameter : ""
+
+export const extractUserFromQuery = (query: any) => {
+  return {
+    name: decodeURIComponent(parseQueryParameters(query.name)),
+    identityDocument: decodeURIComponent(
+      parseQueryParameters(query.identityDocument)
+    ),
+  }
+}
