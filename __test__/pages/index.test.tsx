@@ -1,9 +1,12 @@
 import userEvent from "@testing-library/user-event"
 import Home, {
+  actionLabel,
   emailLabel,
   event,
   identityDocumentLabel,
   nameLabel,
+  openLabel,
+  sendToMailLabel,
   submitButtonText,
   successPdfGenerationMessage,
 } from "pages"
@@ -58,6 +61,21 @@ describe("index", () => {
       const emailInput = screen.getByLabelText(emailLabel)
 
       expect(emailInput).toBeVisible()
+    })
+    it("should have a radio group to select what to do with the pdf", () => {
+      const actionInput = screen.getByText(actionLabel)
+
+      expect(actionInput).toBeVisible()
+    })
+    test("the radio group should have a send to mail label", () => {
+      const sendToMailInput = screen.getByLabelText(sendToMailLabel)
+
+      expect(sendToMailInput).toBeInTheDocument()
+    })
+    test("the radio group should have a send to mail label", () => {
+      const openInput = screen.getByLabelText(openLabel)
+
+      expect(openInput).toBeInTheDocument()
     })
     it("should have a submit button", () => {
       const submitButton = screen.getByRole("button", {

@@ -2,8 +2,13 @@ import {
   Button,
   Collapse,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Link,
   makeStyles,
+  Radio,
+  RadioGroup,
   Typography,
 } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
@@ -29,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
   formElement: {
     marginTop: theme.spacing(2),
   },
+  actionTitle: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: theme.spacing(1),
+  },
 }))
 
 export const event: AppEvent = {
@@ -40,6 +50,9 @@ export const event: AppEvent = {
 export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
+export const actionLabel = "¿Qué hacemos con el pdf?"
+export const sendToMailLabel = "Enviarlo por correo electrónico"
+export const openLabel = "Abrirlo"
 export const submitButtonText = "Generar salvoconducto"
 export const successPdfGenerationMessage =
   "El salvoconducto se abrirá en una nueva pestaña"
@@ -113,6 +126,25 @@ export default function Home() {
                 label={emailLabel}
               />
             </div> */}
+            <div className={classes.formElement}>
+              <FormControl component="fieldset">
+                <div className={classes.actionTitle}>
+                  <FormLabel component="legend">{actionLabel}</FormLabel>
+                </div>
+                <RadioGroup aria-label="action" name="action">
+                  <FormControlLabel
+                    value="send"
+                    control={<Radio />}
+                    label={openLabel}
+                  />
+                  <FormControlLabel
+                    value="open"
+                    control={<Radio />}
+                    label={sendToMailLabel}
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
             <div className={classes.formElement}>
               <Button
                 variant="contained"
