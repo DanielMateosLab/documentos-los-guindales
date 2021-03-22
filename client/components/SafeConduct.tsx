@@ -54,7 +54,7 @@ export default function SafeConduct(props: Props) {
       <Typography gutterBottom className={styles.indented}>
         Que D/D.ª <b>{props.name}</b> con documento de identidad{" "}
         <b>{props.identityDocument}</b> es socio/a de la Asociación Cultural Los
-        Guindales, en cuya sede realizará una formación los días 13 y 14 de
+        Guindales, en cuya sede realizará una formación los días 27 y 28 de
         marzo de 2021.
       </Typography>
       <Typography gutterBottom className={styles.indented}>
