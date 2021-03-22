@@ -5,7 +5,8 @@ module.exports = {
         source: "/pdf-safe-conduct/*",
         headers: [
           {
-            "content-type": "application/pdf",
+            key: "content-type",
+            value: "application/pdf",
           },
         ],
       },
