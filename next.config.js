@@ -2,7 +2,7 @@ module.exports = {
   async headers() {
     return [
       {
-        source: "/pdf-safe-conduct/*",
+        source: "/pdf-safe-conduct",
         headers: [
           {
             key: "content-type",
