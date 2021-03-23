@@ -1,5 +1,4 @@
 import { Moment } from "moment"
-import { GeneratePdfData } from "./types"
 
 export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
   date.locale("es").format(`DD [de] MMMM${withYear ? " [de] YYYY" : ""}`)
@@ -16,14 +15,3 @@ export const extractUserFromQuery = (query: any) => {
     identityDocument: parseQueryParameters(query.identityDocument),
   }
 }
-
-export const getHostURL = (): string =>
-  "http://" + (process.env.VERCEL_URL || "localhost:3000")
-
-export const getPathname = (
-  user: GeneratePdfData,
-  target: "pdf" | "web" = "web"
-): string =>
-  `/${target == "pdf" ? "pdf-" : ""}safe-conduct/${encodeURIComponent(
-    user.name
-  )}?identityDocument=${encodeURIComponent(user.identityDocument)}`
