@@ -11,7 +11,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   try {
     const user = extractUserFromQuery(query)
 
-    const pdf = await generatePdf(user)
+    const pdf = generatePdf(user)
 
     res.end(pdf)
   } catch (e) {
