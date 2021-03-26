@@ -9,7 +9,7 @@ const datesText = "27 y 28 de marzo de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
 const signaturePath = process.env.VERCEL
-  ? "firma_africa.jpg"
+  ? "/firma_africa.jpg"
   : "public/firma_africa.jpg"
 
 const generatePdf = (user: GeneratePdfData): Buffer | string => {
