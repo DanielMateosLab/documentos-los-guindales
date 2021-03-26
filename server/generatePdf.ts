@@ -8,6 +8,9 @@ const title =
 const datesText = "27 y 28 de marzo de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
+const signaturePath = process.env.VERCEL
+  ? "firma_africa.jpg"
+  : "public/firma_africa.jpg"
 
 const generatePdf = (user: GeneratePdfData): Buffer | string => {
   const doc = new PDFDocument({
@@ -74,7 +77,7 @@ const generatePdf = (user: GeneratePdfData): Buffer | string => {
   doc.text(`En Algatocín, a ${submissionDate}.`).moveDown(1)
 
   doc.text("Fdo.: África Rodríguez Nieves", { align: "center" })
-  doc.image("public/firma_africa.jpg", 200, undefined, {
+  doc.image(signaturePath, 200, undefined, {
     width: 200,
   })
 
