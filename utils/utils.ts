@@ -17,9 +17,6 @@ export const extractUserFromQuery = (query: any) => {
   }
 }
 
-export const getHostURL = (): string =>
-  "http://" + (process.env.VERCEL_URL || "localhost:3000")
-
 export const getPathname = (
   user: GeneratePdfData,
   target: "pdf" | "web" = "web"

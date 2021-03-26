@@ -4,7 +4,10 @@ import catchErrors from "server/middleware/catchErrors"
 import { MethodNotAllowedError } from "utils/errors"
 import { safeConductValidator } from "utils/validation"
 
-export const safeConductHandler: NextApiHandler<Buffer> = async (req, res) => {
+export const safeConductHandler: NextApiHandler<Buffer | string> = async (
+  req,
+  res
+) => {
   //TODO: create a function to encapsulate this logic and its tests and put it in your module
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
@@ -12,7 +15,7 @@ export const safeConductHandler: NextApiHandler<Buffer> = async (req, res) => {
     abortEarly: false,
   })
 
-  const pdf = await generatePdf({
+  const pdf = generatePdf({
     name: user.name,
     identityDocument: user.identityDocument,
   })
