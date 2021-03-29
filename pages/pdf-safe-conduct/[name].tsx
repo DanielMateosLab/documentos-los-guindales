@@ -13,6 +13,8 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     const pdf = await generatePdf(user)
 
+    res.setHeader("Content-Type", "application/pdf")
+
     res.end(pdf)
   } catch (e) {
     console.error(e)
