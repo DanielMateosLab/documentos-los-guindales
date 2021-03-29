@@ -1,4 +1,6 @@
+import fs from "fs"
 import moment from "moment"
+import path from "path"
 import PDFDocument from "pdfkit"
 import { GeneratePdfData } from "utils/types"
 import { formatDate } from "utils/utils"
@@ -8,11 +10,11 @@ const title =
 const datesText = "27 y 28 de marzo de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
-const signaturePath = process.env.VERCEL
-  ? "/firma_africa.jpg"
-  : "public/firma_africa.jpg"
 
-const generatePdf = (user: GeneratePdfData): Buffer | string => {
+const generatePdf = async (user: GeneratePdfData): Promise<Buffer | string> => {
+  const signatureImagePath = path.resolve("./public", "firma_africa.jpg")
+  const signatureImage = await fs.promises.readFile(signatureImagePath)
+
   const doc = new PDFDocument({
     size: "A4",
     info: {
@@ -77,7 +79,7 @@ const generatePdf = (user: GeneratePdfData): Buffer | string => {
   doc.text(`En Algatocín, a ${submissionDate}.`).moveDown(1)
 
   doc.text("Fdo.: África Rodríguez Nieves", { align: "center" })
-  doc.image(signaturePath, 200, undefined, {
+  doc.image(signatureImage, 200, undefined, {
     width: 200,
   })
 

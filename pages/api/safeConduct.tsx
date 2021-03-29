@@ -15,7 +15,7 @@ export const safeConductHandler: NextApiHandler<Buffer | string> = async (
     abortEarly: false,
   })
 
-  const pdf = generatePdf({
+  const pdf = await generatePdf({
     name: user.name,
     identityDocument: user.identityDocument,
   })
