@@ -2,7 +2,7 @@ import { Moment } from "moment"
 import { GeneratePdfData } from "./types"
 
 export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
-  date.locale("es").format(`DD [de] MMMM${withYear ? " [de] YYYY" : ""}`)
+  date.locale("es").format(`D [de] MMMM${withYear ? " [de] YYYY" : ""}`)
 
 export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
