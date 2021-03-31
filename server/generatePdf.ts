@@ -7,7 +7,7 @@ import { formatDate } from "utils/utils"
 
 const title =
   "Declaración responsable para facilitar la movilidad relacionada con actividades de formación"
-const datesText = "27 y 28 de marzo de 2021"
+const datesText = "2 y 3 de abril de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
 

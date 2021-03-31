@@ -33,8 +33,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const event: AppEvent = {
   name: "Taller de Hierbas Medicinales",
-  startDate: moment("2021-03-13"),
-  endDate: moment("2021-03-14"),
+  startDate: moment("2021-04-02"),
+  endDate: moment("2021-04-03"),
 }
 
 export const nameLabel = "Nombre"
