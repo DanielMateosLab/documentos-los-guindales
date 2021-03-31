@@ -7,7 +7,7 @@ import { formatDate } from "utils/utils"
 
 const title =
   "Declaración responsable para facilitar la movilidad relacionada con actividades de formación"
-const datesText = "2 y 3 de abril de 2021"
+const datesText = "entre los días 1 y 3 de abril de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
 
@@ -64,7 +64,7 @@ const generatePdf = async (user: GeneratePdfData): Promise<Buffer | string> => {
     .text(user.identityDocument, { continued: true })
     .font("Helvetica")
     .text(
-      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación los días ${datesText}`
+      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación ${datesText}`
     )
     .moveDown(1)
   doc
