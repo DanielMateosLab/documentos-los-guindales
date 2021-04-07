@@ -79,6 +79,7 @@ export default function Home() {
           name: "",
           identityDocument: "",
           email: "",
+          action: "",
         }}
         validationSchema={safeConductValidator}
         onSubmit={(values, { setSubmitting }) => {
