@@ -2,16 +2,12 @@ import {
   Button,
   Collapse,
   Container,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
   Link,
   makeStyles,
-  Radio,
-  RadioGroup,
   Typography,
 } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
+import FormikRadioGroup from "client/components/FormikRadioGroup"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
 import moment from "moment"
@@ -20,6 +16,8 @@ import { useState } from "react"
 import { AppEvent } from "utils/types"
 import { formatDate, getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
+
+// TODO: use css grid to style the form so the radioGroup does not override left margin
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,8 +49,10 @@ export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
 export const actionLabel = "¿Qué hacemos con el pdf?"
+
 export const sendToMailLabel = "Enviarlo por correo electrónico"
 export const openLabel = "Abrirlo"
+
 export const submitButtonText = "Generar salvoconducto"
 export const successPdfGenerationMessage =
   "El salvoconducto se abrirá en una nueva pestaña"
@@ -60,14 +60,14 @@ export const failPdfGenerationMessage =
   "Ha habido un problema generando el salvoconducto. Vuelve a intentarlo más tarde o contacta con Dani."
 
 export default function Home() {
-  const classes = useStyles()
+  const styles = useStyles()
   const [successMessage, setSuccessMessage] = useState<string | undefined>()
   const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const [pathname, setPathname] = useState<string | undefined>()
   const router = useRouter()
 
   return (
-    <Container className={classes.container}>
+    <Container className={styles.container}>
       <Typography variant="h4" component="h1" align="center">
         Salvoconducto para el {event.name}.
       </Typography>
@@ -101,8 +101,8 @@ export default function Home() {
         }}
       >
         {(formik) => (
-          <form onSubmit={formik.handleSubmit} className={classes.form}>
-            <div className={classes.formElement}>
+          <form onSubmit={formik.handleSubmit} className={styles.form}>
+            <div className={styles.formElement}>
               <FormikTextInput
                 name="name"
                 variant="outlined"
@@ -110,7 +110,7 @@ export default function Home() {
                 label={nameLabel}
               />
             </div>
-            <div className={classes.formElement}>
+            <div className={styles.formElement}>
               <FormikTextInput
                 name="identityDocument"
                 variant="outlined"
@@ -126,26 +126,17 @@ export default function Home() {
                 label={emailLabel}
               />
             </div> */}
-            <div className={classes.formElement}>
-              <FormControl component="fieldset">
-                <div className={classes.actionTitle}>
-                  <FormLabel component="legend">{actionLabel}</FormLabel>
-                </div>
-                <RadioGroup aria-label="action" name="action">
-                  <FormControlLabel
-                    value="send"
-                    control={<Radio />}
-                    label={openLabel}
-                  />
-                  <FormControlLabel
-                    value="open"
-                    control={<Radio />}
-                    label={sendToMailLabel}
-                  />
-                </RadioGroup>
-              </FormControl>
+            <div className={styles.formElement}>
+              <FormikRadioGroup
+                label={actionLabel}
+                name="action"
+                options={{
+                  open: openLabel,
+                  sendToMail: sendToMailLabel,
+                }}
+              />
             </div>
-            <div className={classes.formElement}>
+            <div className={styles.formElement}>
               <Button
                 variant="contained"
                 color="primary"
@@ -156,7 +147,7 @@ export default function Home() {
               </Button>
             </div>
             <Collapse in={!!successMessage}>
-              <div className={classes.formElement}>
+              <div className={styles.formElement}>
                 <Alert severity="success">
                   <AlertTitle>{successMessage}</AlertTitle>
                   Si no funciona,{" "}
@@ -168,7 +159,7 @@ export default function Home() {
               </div>
             </Collapse>
             <Collapse in={!!errorMessage}>
-              <div className={classes.formElement}>
+              <div className={styles.formElement}>
                 <Alert severity="error"> {errorMessage} </Alert>
               </div>
             </Collapse>

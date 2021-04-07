@@ -1,65 +1,66 @@
-import { FormControl, FormLabel, makeStyles } from "@material-ui/core"
+import { FormControl, FormLabel } from "@material-ui/core"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Radio from "@material-ui/core/Radio"
-import RadioGroup from "@material-ui/core/RadioGroup"
+import RadioGroup, { RadioGroupProps } from "@material-ui/core/RadioGroup"
 import { FieldHookConfig, useField } from "formik"
 import React from "react"
 
-const renderOptions = (options: string[]) => {
-  return options.map((option) => (
-    <FormControlLabel
-      key={option}
-      value={option}
-      control={<Radio />}
-      label={option}
-    />
-  ))
+type OptionLabel = string
+/** The first option will be set by default unless startUnset is true*/
+interface RadioOptions {
+  [key: string]: OptionLabel
 }
 
-const useStyles = makeStyles((theme) => ({
-  actionTitle: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: theme.spacing(1),
-  },
-}))
-
-type Props = FieldHookConfig<any> & { label: string }
+type Props = FieldHookConfig<any> &
+  RadioGroupProps & {
+    label: string
+    options: RadioOptions
+    startUnset?: boolean
+  }
+/**
+ * A Material UI RadioGroup to use with Formik.
+ * @property {RadioOptions} options - An object containing the radio group options.
+ * The key is a needed option name, and the value will be the option label shown in the UI.
+ * @property {boolean} startUnset - Wether to set the first option as default. Defaults to false.
+ *  */
 const FormikRadioGroup = ({
   label,
-  form: { touched, errors },
-  options,
   children,
+  options,
+  startUnset = false,
   ...props
 }: Props) => {
-  const [field, meta] = useField(props)
-  const styles = useStyles()
+  const firstOption = Object.keys(options)[0]
+  const [field, meta, helpers] = useField({
+    ...props,
+    type: "radio",
+    // TODO: fix this: value: startUnset == false ? firstOption : undefined,
+  })
+
+  const Options = () => (
+    <>
+      {Object.keys(options).map((option) => (
+        <FormControlLabel
+          key={option}
+          value={option}
+          control={<Radio />}
+          label={options[option]}
+        />
+      ))}
+    </>
+  )
 
   return (
     <FormControl component="fieldset">
-      <div className={styles.actionTitle}>
-        <FormLabel component="legend">{label}</FormLabel>
-      </div>
-      <RadioGroup aria-label="action" name="action">
-        <FormControlLabel value="send" control={<Radio />} label={openLabel} />
-        <FormControlLabel
-          value="open"
-          control={<Radio />}
-          label={sendToMailLabel}
-        />
+      <FormLabel component="legend">{label}</FormLabel>
+      <RadioGroup
+        aria-label={props.name}
+        name={props.name}
+        value={field.value}
+        onChange={(event) => helpers.setValue(event.target.value)}
+      >
+        <Options />
       </RadioGroup>
-
-      <RadioGroup {...field} {...props} name={fieldName}>
-        {/* Here you either map over the props and render radios from them,
-                   or just render the children if you're using the function as a child*/}
-        {options ? renderOptions(options) : children}
-      </RadioGroup>
-
-      {touched[fieldName] && errors[fieldName] && (
-        <span style={{ color: "red", fontFamily: "sans-serif" }}>
-          {errors[fieldName]}
-        </span>
-      )}
     </FormControl>
   )
 }
