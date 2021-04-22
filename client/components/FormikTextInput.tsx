@@ -28,7 +28,7 @@ export default function FormikTextInput({
       type={type}
       variant="outlined"
       error={meta.touched && !!meta.error}
-      helperText={meta.touched && meta.error}
+      helperText={(meta.touched && meta.error) || props.helperText}
     />
   )
 }
