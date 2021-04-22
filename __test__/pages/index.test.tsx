@@ -1,14 +1,14 @@
 import userEvent from "@testing-library/user-event"
 import Home, {
+  dateLabel,
   emailLabel,
-  event,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
   successPdfGenerationMessage,
 } from "pages"
 import { render, screen, waitFor } from "utils/testUtils"
-import { formatDate, getPathname } from "utils/utils"
+import { getPathname } from "utils/utils"
 
 global.open = jest.fn()
 
@@ -19,31 +19,18 @@ describe("index", () => {
   describe("page title", () => {
     it("should have a title", () => {
       const titleElement = screen.getByRole("heading", {
-        name: new RegExp("Salvoconducto"),
+        name: new RegExp("Generador"),
       })
 
       expect(titleElement).toBeDefined()
     })
-    it("should display the event name", () => {
-      const eventNameElement = screen.getByRole("heading", {
-        name: new RegExp(event.name),
-      })
-
-      expect(eventNameElement).toBeDefined()
-    })
-    it("should display the event dates", () => {
-      const startDateElement = screen.getByRole("heading", {
-        name: new RegExp(formatDate(event.startDate)),
-      })
-      const endDateElement = screen.getByRole("heading", {
-        name: new RegExp(formatDate(event.endDate)),
-      })
-
-      expect(startDateElement).toBeDefined()
-      expect(endDateElement).toBeDefined()
-    })
   })
   describe("form", () => {
+    it("should have a dates input", () => {
+      const datesInput = screen.getByLabelText(dateLabel)
+
+      expect(datesInput).toBeVisible()
+    })
     it("should have a name input", () => {
       const nameInput = screen.getByLabelText(nameLabel)
 
