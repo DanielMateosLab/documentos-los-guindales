@@ -77,11 +77,9 @@ export default function Home() {
         onSubmit={(values, { setSubmitting }) => {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
+          setPathname(getPathname({ ...values }))
 
-          const newPathname = getPathname({ ...values })
-          setPathname(newPathname)
-
-          window.open(newPathname, "_blank")
+          window.open(pathname, "_blank")
 
           setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
