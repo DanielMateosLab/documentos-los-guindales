@@ -8,9 +8,7 @@ export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
 
 export const getPathname = (pdfData: PdfData): string => {
-  const queryParameters = Object.entries(pdfData)
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-    .join("&")
+  const queryParameters = new URLSearchParams(pdfData as {}).toString()
 
   return "/pdf-safe-conduct?" + queryParameters
 }
