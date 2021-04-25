@@ -77,9 +77,13 @@ export default function Home() {
         onSubmit={(values, { setSubmitting }) => {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
-          setPathname(getPathname({ ...values }))
 
-          window.open(pathname, "_blank")
+          // Why not to set the pathname and then use it in window.open()?
+          //  For performance reasons, react sometimes does not update the state inmediatly
+          //  so the opened tab has not the updated path
+          const newPathname = getPathname({ ...values })
+          window.open(newPathname, "_blank")
+          setPathname(newPathname)
 
           setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
