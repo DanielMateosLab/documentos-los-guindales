@@ -7,9 +7,10 @@ export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
 export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
 
-export const getPathname = (pdfData: PdfData): string =>
-  `/pdf-safe-conduct?name=${encodeURIComponent(
-    pdfData.name
-  )}&identityDocument=${encodeURIComponent(
-    pdfData.identityDocument
-  )}&date=${encodeURIComponent(pdfData.date)}`
+export const getPathname = (pdfData: PdfData): string => {
+  const queryParameters = Object.entries(pdfData)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join("&")
+
+  return "/pdf-safe-conduct?" + queryParameters
+}
