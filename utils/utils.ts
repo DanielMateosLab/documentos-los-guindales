@@ -8,8 +8,8 @@ export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
 
 export const getPathname = (pdfData: PdfData): string =>
-  `/pdf-safe-conduct/${encodeURIComponent(
+  `/pdf-safe-conduct?name=${encodeURIComponent(
     pdfData.name
-  )}?identityDocument=${encodeURIComponent(
+  )}&identityDocument=${encodeURIComponent(
     pdfData.identityDocument
   )}&date=${encodeURIComponent(pdfData.date)}`

@@ -1,5 +1,4 @@
-import { getServerSideProps } from "pages/pdf-safe-conduct/[name]"
-import { extractUserFromQuery } from "utils/utils"
+import { getServerSideProps } from "pages/pdf-safe-conduct"
 
 describe("pdf safe conduct page", () => {
   describe("getServerSideProps", () => {
@@ -17,16 +16,6 @@ describe("pdf safe conduct page", () => {
     const generatePdfSpy = jest
       .spyOn(require("server/generatePdf"), "default")
       .mockImplementation(async () => mockBuffer)
-
-    it("should extract the user from the query parameters", async () => {
-      const extractUserFromQuerySpy = jest.spyOn(
-        require("utils/utils"),
-        "extractUserFromQuery"
-      )
-      await getServerSideProps(context)
-
-      expect(extractUserFromQuery).toHaveBeenCalledWith(context.query)
-    })
     it("should generate the pdf", async () => {
       await getServerSideProps(context)
 
