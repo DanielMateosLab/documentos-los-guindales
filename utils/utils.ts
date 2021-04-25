@@ -1,5 +1,5 @@
 import { Moment } from "moment"
-import { GeneratePdfData } from "./types"
+import { PdfData } from "./types"
 
 export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
   date.locale("es").format(`D [de] MMMM${withYear ? " [de] YYYY" : ""}`)
@@ -7,17 +7,9 @@ export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
 export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
 
-export const parseQueryParameters = (parameter: any) =>
-  typeof parameter == "string" ? parameter : ""
-
-export const extractUserFromQuery = (query: any) => {
-  return {
-    name: parseQueryParameters(query.name),
-    identityDocument: parseQueryParameters(query.identityDocument),
-  }
-}
-
-export const getPathname = (user: GeneratePdfData): string =>
+export const getPathname = (pdfData: PdfData): string =>
   `/pdf-safe-conduct/${encodeURIComponent(
-    user.name
-  )}?identityDocument=${encodeURIComponent(user.identityDocument)}`
+    pdfData.name
+  )}?identityDocument=${encodeURIComponent(
+    pdfData.identityDocument
+  )}&date=${encodeURIComponent(pdfData.date)}`

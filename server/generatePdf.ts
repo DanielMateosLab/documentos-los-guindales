@@ -2,17 +2,19 @@ import fs from "fs"
 import moment from "moment"
 import path from "path"
 import PDFDocument from "pdfkit"
-import { GeneratePdfData } from "utils/types"
+import { PdfData } from "utils/types"
 import { formatDate } from "utils/utils"
 
 const title =
   "Declaración responsable para facilitar la movilidad relacionada con actividades de formación"
-// TODO: use form's date value
-const datesText = "2 y 3 de abril de 2021"
 const submissionDate = formatDate(moment(), { withYear: true })
 const indentation = 72 / 4
 
-const generatePdf = async (user: GeneratePdfData): Promise<Buffer | string> => {
+const generatePdf = async ({
+  name = "",
+  identityDocument = "",
+  date = "",
+}: PdfData): Promise<Buffer | string> => {
   const signatureImagePath = path.resolve("./public", "firma_africa.jpg")
   const signatureImage = await fs.promises.readFile(signatureImagePath)
 
@@ -58,14 +60,14 @@ const generatePdf = async (user: GeneratePdfData): Promise<Buffer | string> => {
 
     .text("Que D/D.ª ", { continued: true, indent: indentation })
     .font("Helvetica-Bold")
-    .text(user.name, { continued: true })
+    .text(name, { continued: true })
     .font("Helvetica")
     .text(" con documento de identidad ", { continued: true })
     .font("Helvetica-Bold")
-    .text(user.identityDocument, { continued: true })
+    .text(identityDocument, { continued: true })
     .font("Helvetica")
     .text(
-      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación los días ${datesText}`
+      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación los días ${date}`
     )
     .moveDown(1)
   doc

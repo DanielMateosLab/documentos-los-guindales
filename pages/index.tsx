@@ -78,13 +78,7 @@ export default function Home() {
           setSuccessMessage(undefined)
           setErrorMessage(undefined)
 
-          const newPathname = getPathname(
-            {
-              name: values.name,
-              identityDocument: values.identityDocument,
-            },
-            "pdf"
-          )
+          const newPathname = getPathname({ ...values })
           setPathname(newPathname)
 
           window.open(newPathname, "_blank")

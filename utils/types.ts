@@ -20,7 +20,8 @@ export type ErrorResponse<Payload = undefined> = {
 
 export type SafeConductPostResponse = ErrorResponse | Buffer
 
-export interface GeneratePdfData {
+export interface PdfData {
   name: string
   identityDocument: string
+  date: string
 }

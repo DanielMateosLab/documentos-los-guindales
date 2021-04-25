@@ -2,16 +2,14 @@ import { Container, makeStyles, Typography } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
 import { GetServerSideProps } from "next"
 import generatePdf from "server/generatePdf"
-import { extractUserFromQuery } from "utils/utils"
+import { PdfData } from "utils/types"
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   res,
 }) => {
   try {
-    const user = extractUserFromQuery(query)
-
-    const pdf = await generatePdf(user)
+    const pdf = await generatePdf((query as unknown) as PdfData)
 
     res.setHeader("Content-Type", "application/pdf")
 
