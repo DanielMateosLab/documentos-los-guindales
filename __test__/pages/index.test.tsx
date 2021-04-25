@@ -57,7 +57,8 @@ describe("index", () => {
     describe("submission handler", () => {
       const name = "aaaaaa"
       const identityDocument = "bbbbbb"
-      const pathname = getPathname({ name, identityDocument }, "pdf")
+      const date = "ccccc"
+      const pathname = getPathname({ date, name, identityDocument })
 
       const fillFormAndSubmit = () => {
         userEvent.type(screen.getByLabelText(nameLabel), name)
@@ -65,6 +66,8 @@ describe("index", () => {
           screen.getByLabelText(identityDocumentLabel),
           identityDocument
         )
+        userEvent.clear(screen.getByLabelText(dateLabel))
+        userEvent.type(screen.getByLabelText(dateLabel), date)
         userEvent.click(screen.getByText(submitButtonText))
       }
 
