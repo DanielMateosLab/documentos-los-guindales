@@ -8,17 +8,13 @@ export const safeConductHandler: NextApiHandler<Buffer | string> = async (
   req,
   res
 ) => {
-  //TODO: create a function to encapsulate this logic and its tests and put it in your module
   if (req.method !== "POST") throw new MethodNotAllowedError()
 
-  const user = await safeConductValidator.validate(req.body, {
+  const pdfData = await safeConductValidator.validate(req.body, {
     abortEarly: false,
   })
 
-  const pdf = await generatePdf({
-    name: user.name,
-    identityDocument: user.identityDocument,
-  })
+  const pdf = await generatePdf(pdfData)
 
   res.setHeader("content-type", "application/pdf")
 
