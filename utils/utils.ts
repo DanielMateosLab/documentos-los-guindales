@@ -17,10 +17,7 @@ export const extractUserFromQuery = (query: any) => {
   }
 }
 
-export const getPathname = (
-  user: GeneratePdfData,
-  target: "pdf" | "web" = "web"
-): string =>
-  `/${target == "pdf" ? "pdf-" : ""}safe-conduct/${encodeURIComponent(
+export const getPathname = (user: GeneratePdfData): string =>
+  `/pdf-safe-conduct/${encodeURIComponent(
     user.name
   )}?identityDocument=${encodeURIComponent(user.identityDocument)}`
