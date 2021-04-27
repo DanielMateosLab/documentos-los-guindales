@@ -5,6 +5,8 @@ import PDFDocument from "pdfkit"
 import { PdfData } from "utils/types"
 import { formatDate } from "utils/utils"
 
+// TODO: replace moment with luxon and set the placeholderDate to the next weekend
+
 const title =
   "Declaración responsable para facilitar la movilidad relacionada con actividades de formación"
 const submissionDate = formatDate(moment(), { withYear: true })
@@ -22,7 +24,7 @@ const generatePdf = async ({
     size: "A4",
     info: {
       Author: "África Rodríguez Nieves",
-      Title: title,
+      Title: "Salvoconducto " + name,
     },
   })
 
