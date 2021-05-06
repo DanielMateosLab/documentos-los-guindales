@@ -109,9 +109,8 @@ export default function Home() {
                 className={classes.indentation}
                 paragraph
               >
-                Que D/D.ª Teodora Meixeira con documento de identidad 68796252L
-                es socio/ a de la Asociación Cultural Los Guindales, en cuya
-                sede realizará una formación <b>{formik.values.date}</b>.
+                Que D/D.ª [...] realizará una formación{" "}
+                <b>{formik.values.date}</b>.
               </Typography>
               <FormikTextInput
                 name="date"
