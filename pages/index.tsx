@@ -11,7 +11,7 @@ import {
 import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Formik } from "formik"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
@@ -37,8 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const placeholderDate = "los días 2 y 3 de abril de 2021"
-
 export const dateLabel = "Fecha"
 export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
@@ -61,6 +59,8 @@ export default function Home() {
   const classes = useStyles({
     smallDevice,
   })
+
+  const placeholderDate = "los días 2 y 3 de abril de 2021"
 
   return (
     <Container className={classes.container} maxWidth="md">
@@ -85,99 +85,109 @@ export default function Home() {
           window.open(newPathname, "_blank")
           setPathname(newPathname)
 
+          window.localStorage.setItem("date", values.date)
+
           setSuccessMessage(successPdfGenerationMessage)
           setSubmitting(false)
         }}
       >
-        {(formik) => (
-          <form onSubmit={formik.handleSubmit}>
-            <div className={classes.formElement}>
-              <Typography
-                variant="h5"
-                component="h2"
-                gutterBottom
-                align={responsiveAlign}
-              >
-                Fecha del salvoconducto
-              </Typography>
-              <Typography>
-                En el documento generado, corresponde al texto marcado en
-                negrita en el siguiente párrafo:
-              </Typography>
-              <Typography
-                variant="body2"
-                className={classes.indentation}
-                paragraph
-              >
-                Que D/D.ª [...] realizará una formación{" "}
-                <b>{formik.values.date}</b>.
-              </Typography>
-              <FormikTextInput
-                name="date"
-                variant="outlined"
-                type="text"
-                label={dateLabel}
-                multiline
-                fullWidth
-              />
-            </div>
-            <div className={classes.formElement}>
-              <Typography
-                variant="h5"
-                component="h2"
-                gutterBottom
-                align={responsiveAlign}
-              >
-                Datos del participante
-              </Typography>
-              <FormikTextInput
-                className={classes.participantInput}
-                name="name"
-                variant="outlined"
-                type="text"
-                label={nameLabel}
-                fullWidth={smallDevice}
-              />
-              <FormikTextInput
-                className={classes.participantInput}
-                name="identityDocument"
-                variant="outlined"
-                type="text"
-                label={identityDocumentLabel}
-                fullWidth={smallDevice}
-              />
-            </div>
-            <div className={classes.formElement}>
-              <div className={smallDevice ? classes.centeredButton : undefined}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  disabled={formik.isSubmitting}
+        {(formik) => {
+          useEffect(() => {
+            const localStorageDate = window.localStorage.getItem("date")
+            if (localStorageDate) formik.setFieldValue("date", localStorageDate)
+          }, [])
+          return (
+            <form onSubmit={formik.handleSubmit}>
+              <div className={classes.formElement}>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  gutterBottom
+                  align={responsiveAlign}
                 >
-                  {submitButtonText}
-                </Button>
+                  Fecha del salvoconducto
+                </Typography>
+                <Typography>
+                  En el documento generado, corresponde al texto marcado en
+                  negrita en el siguiente párrafo:
+                </Typography>
+                <Typography
+                  variant="body2"
+                  className={classes.indentation}
+                  paragraph
+                >
+                  Que D/D.ª [...] realizará una formación{" "}
+                  <b>{formik.values.date}</b>.
+                </Typography>
+                <FormikTextInput
+                  name="date"
+                  variant="outlined"
+                  type="text"
+                  label={dateLabel}
+                  multiline
+                  fullWidth
+                />
               </div>
-            </div>
-            <Collapse in={!!successMessage}>
               <div className={classes.formElement}>
-                <Alert severity="success">
-                  <AlertTitle>{successMessage}</AlertTitle>
-                  Si no funciona,{" "}
-                  <Link href={pathname} target="_blank">
-                    pulsa aquí
-                  </Link>
-                  .
-                </Alert>
+                <Typography
+                  variant="h5"
+                  component="h2"
+                  gutterBottom
+                  align={responsiveAlign}
+                >
+                  Datos del participante
+                </Typography>
+                <FormikTextInput
+                  className={classes.participantInput}
+                  name="name"
+                  variant="outlined"
+                  type="text"
+                  label={nameLabel}
+                  fullWidth={smallDevice}
+                />
+                <FormikTextInput
+                  className={classes.participantInput}
+                  name="identityDocument"
+                  variant="outlined"
+                  type="text"
+                  label={identityDocumentLabel}
+                  fullWidth={smallDevice}
+                />
               </div>
-            </Collapse>
-            <Collapse in={!!errorMessage}>
               <div className={classes.formElement}>
-                <Alert severity="error"> {errorMessage} </Alert>
+                <div
+                  className={smallDevice ? classes.centeredButton : undefined}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={formik.isSubmitting}
+                  >
+                    {submitButtonText}
+                  </Button>
+                </div>
               </div>
-            </Collapse>
-          </form>
-        )}
+              <Collapse in={!!successMessage}>
+                <div className={classes.formElement}>
+                  <Alert severity="success">
+                    <AlertTitle>{successMessage}</AlertTitle>
+                    Si no funciona,{" "}
+                    <Link href={pathname} target="_blank">
+                      pulsa aquí
+                    </Link>
+                    .
+                  </Alert>
+                </div>
+              </Collapse>
+              <Collapse in={!!errorMessage}>
+                <div className={classes.formElement}>
+                  <Alert severity="error"> {errorMessage} </Alert>
+                </div>
+              </Collapse>
+            </form>
+          )
+        }}
       </Formik>
     </Container>
   )
