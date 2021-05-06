@@ -55,7 +55,7 @@ export default function Home() {
   const [pathname, setPathname] = useState<string | undefined>()
 
   const theme = useTheme()
-  const smallDevice = useMediaQuery(theme.breakpoints.down("sm"))
+  const smallDevice = useMediaQuery(theme.breakpoints.down("xs"))
   const responsiveAlign = smallDevice ? "center" : undefined
 
   const classes = useStyles({
