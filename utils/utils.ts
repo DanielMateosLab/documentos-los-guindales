@@ -7,8 +7,8 @@ export const formatDate = (date: Moment, { withYear } = { withYear: false }) =>
 export const parseUsernameToPdfName = (name: string) =>
   name.split(" ").join("_")
 
-export const getPathname = (pdfData: PdfData): string => {
+export const getPathname = ({ name, ...pdfData }: PdfData): string => {
   const queryParameters = new URLSearchParams(pdfData as {}).toString()
 
-  return "/pdf-safe-conduct?" + queryParameters
+  return `/pdf-safe-conduct/${encodeURIComponent(name)}?` + queryParameters
 }

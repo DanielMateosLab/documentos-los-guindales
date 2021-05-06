@@ -1,4 +1,4 @@
-import { getServerSideProps } from "pages/pdf-safe-conduct"
+import { getServerSideProps } from "pages/pdf-safe-conduct/[name]"
 
 describe("pdf safe conduct page", () => {
   describe("getServerSideProps", () => {
