@@ -5,14 +5,13 @@ import {
   Link,
   makeStyles,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import { Form, FormikProps } from "formik"
 import { useEffect } from "react"
 import { SafeConductFormValues } from "utils/types"
+import { useIsSmallDevice } from "utils/utils"
 import pdfSafeConductReducer from "./reducer"
 
 export const dateLabel = "Fecha"
@@ -61,8 +60,7 @@ const SafeConductForm: React.FC<Props> = ({ formik, state }) => {
     if (localStorageDate) formik.setFieldValue("date", localStorageDate)
   }, [])
 
-  const theme = useTheme()
-  const smallDevice = useMediaQuery(theme.breakpoints.down("xs"))
+  const smallDevice = useIsSmallDevice()
   const responsiveAlign = smallDevice ? "center" : undefined
 
   return (
