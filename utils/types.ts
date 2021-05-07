@@ -17,3 +17,9 @@ export interface PdfData {
   identityDocument: string
   date: string
 }
+
+export interface SafeConductFormValues {
+  date: string
+  name: string
+  identityDocument: string
+}

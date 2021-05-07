@@ -13,6 +13,7 @@ import FormikTextInput from "client/components/FormikTextInput"
 import pdfSafeConductReducer from "client/pdf-safe-conduct/reducer"
 import { Form, Formik, FormikHelpers } from "formik"
 import { useEffect, useReducer } from "react"
+import { SafeConductFormValues } from "utils/types"
 import { getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
@@ -55,15 +56,14 @@ export default function Home() {
     pathname: undefined,
   })
 
-  const initialValues = {
+  const initialValues: SafeConductFormValues = {
     date: "los días 2 y 3 de abril de 2021",
     name: "",
     identityDocument: "",
   }
-  type FormValues = typeof initialValues
   const handleSubmit = (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    values: SafeConductFormValues,
+    { setSubmitting }: FormikHelpers<SafeConductFormValues>
   ) => {
     dispatch({ type: "setStatus", payload: undefined })
 
