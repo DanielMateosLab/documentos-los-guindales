@@ -11,7 +11,7 @@ import {
 import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import pdfSafeConductReducer from "client/pdf-safe-conduct/reducer"
-import { Formik, FormikHelpers } from "formik"
+import { Form, Formik, FormikHelpers } from "formik"
 import { useEffect, useReducer } from "react"
 import { getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
@@ -102,7 +102,7 @@ export default function Home() {
             if (localStorageDate) formik.setFieldValue("date", localStorageDate)
           }, [])
           return (
-            <form onSubmit={formik.handleSubmit}>
+            <Form>
               <div className={classes.formElement}>
                 <Typography
                   variant="h5"
@@ -190,7 +190,7 @@ export default function Home() {
                   <Alert severity="error"> {failPdfGenerationMessage} </Alert>
                 </div>
               </Collapse>
-            </form>
+            </Form>
           )
         }}
       </Formik>
