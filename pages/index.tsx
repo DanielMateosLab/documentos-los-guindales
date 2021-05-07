@@ -11,7 +11,7 @@ import {
 import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
 import pdfSafeConductReducer from "client/pdf-safe-conduct/reducer"
-import { Formik } from "formik"
+import { Formik, FormikHelpers } from "formik"
 import { useEffect, useReducer } from "react"
 import { getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
@@ -55,13 +55,36 @@ export default function Home() {
     pathname: undefined,
   })
 
+  const initialValues = {
+    date: "los días 2 y 3 de abril de 2021",
+    name: "",
+    identityDocument: "",
+  }
+  type FormValues = typeof initialValues
+  const handleSubmit = (
+    values: FormValues,
+    { setSubmitting }: FormikHelpers<FormValues>
+  ) => {
+    dispatch({ type: "setStatus", payload: undefined })
+
+    // Why not to set the pathname and then use it in window.open()?
+    //  For performance reasons, react sometimes does not update the state inmediatly
+    //  so the opened tab has not the updated path
+    const newPathname = getPathname({ ...values })
+    window.open(newPathname, "_blank")
+    dispatch({ type: "setPathname", payload: newPathname })
+
+    window.localStorage.setItem("date", values.date)
+
+    dispatch({ type: "setStatus", payload: "success" })
+    setSubmitting(false)
+  }
+
   const theme = useTheme()
   const smallDevice = useMediaQuery(theme.breakpoints.down("xs"))
   const responsiveAlign = smallDevice ? "center" : undefined
 
   const classes = useStyles()
-
-  const placeholderDate = "los días 2 y 3 de abril de 2021"
 
   return (
     <Container className={classes.container} maxWidth="md">
@@ -69,27 +92,9 @@ export default function Home() {
         Generador de salvoconductos
       </Typography>
       <Formik
-        initialValues={{
-          date: placeholderDate,
-          name: "",
-          identityDocument: "",
-        }}
+        {...{ initialValues }}
         validationSchema={safeConductValidator}
-        onSubmit={(values, { setSubmitting }) => {
-          dispatch({ type: "setStatus", payload: undefined })
-
-          // Why not to set the pathname and then use it in window.open()?
-          //  For performance reasons, react sometimes does not update the state inmediatly
-          //  so the opened tab has not the updated path
-          const newPathname = getPathname({ ...values })
-          window.open(newPathname, "_blank")
-          dispatch({ type: "setPathname", payload: newPathname })
-
-          window.localStorage.setItem("date", values.date)
-
-          dispatch({ type: "setStatus", payload: "success" })
-          setSubmitting(false)
-        }}
+        onSubmit={handleSubmit}
       >
         {(formik) => {
           useEffect(() => {
