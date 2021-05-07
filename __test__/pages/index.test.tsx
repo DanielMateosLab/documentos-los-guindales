@@ -1,12 +1,13 @@
 import userEvent from "@testing-library/user-event"
-import Home, {
+import {
   dateLabel,
   emailLabel,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
   successPdfGenerationMessage,
-} from "pages"
+} from "client/pdf-safe-conduct/safeConductForm"
+import Home from "pages"
 import { render, screen, waitFor } from "utils/testUtils"
 import { getPathname } from "utils/utils"
 
