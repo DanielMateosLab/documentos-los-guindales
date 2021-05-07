@@ -10,8 +10,9 @@ import {
 } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
 import FormikTextInput from "client/components/FormikTextInput"
+import pdfSafeConductReducer from "client/pdf-safe-conduct/reducer"
 import { Formik } from "formik"
-import { useEffect, useState } from "react"
+import { useEffect, useReducer } from "react"
 import { getPathname } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
@@ -42,23 +43,23 @@ export const nameLabel = "Nombre"
 export const identityDocumentLabel = "DNI/NIE"
 export const emailLabel = "Correo electrónico"
 export const submitButtonText = "Generar salvoconducto"
+
 export const successPdfGenerationMessage =
   "El salvoconducto se abrirá en una nueva pestaña"
 export const failPdfGenerationMessage =
   "Ha habido un problema generando el salvoconducto. Vuelve a intentarlo más tarde o contacta con Dani."
 
 export default function Home() {
-  const [successMessage, setSuccessMessage] = useState<string | undefined>()
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
-  const [pathname, setPathname] = useState<string | undefined>()
+  const [state, dispatch] = useReducer(pdfSafeConductReducer, {
+    status: undefined,
+    pathname: undefined,
+  })
 
   const theme = useTheme()
   const smallDevice = useMediaQuery(theme.breakpoints.down("xs"))
   const responsiveAlign = smallDevice ? "center" : undefined
 
-  const classes = useStyles({
-    smallDevice,
-  })
+  const classes = useStyles()
 
   const placeholderDate = "los días 2 y 3 de abril de 2021"
 
@@ -75,19 +76,18 @@ export default function Home() {
         }}
         validationSchema={safeConductValidator}
         onSubmit={(values, { setSubmitting }) => {
-          setSuccessMessage(undefined)
-          setErrorMessage(undefined)
+          dispatch({ type: "setStatus", payload: undefined })
 
           // Why not to set the pathname and then use it in window.open()?
           //  For performance reasons, react sometimes does not update the state inmediatly
           //  so the opened tab has not the updated path
           const newPathname = getPathname({ ...values })
           window.open(newPathname, "_blank")
-          setPathname(newPathname)
+          dispatch({ type: "setPathname", payload: newPathname })
 
           window.localStorage.setItem("date", values.date)
 
-          setSuccessMessage(successPdfGenerationMessage)
+          dispatch({ type: "setStatus", payload: "success" })
           setSubmitting(false)
         }}
       >
@@ -168,21 +168,21 @@ export default function Home() {
                   </Button>
                 </div>
               </div>
-              <Collapse in={!!successMessage}>
+              <Collapse in={state.status == "success"}>
                 <div className={classes.formElement}>
                   <Alert severity="success">
-                    <AlertTitle>{successMessage}</AlertTitle>
+                    <AlertTitle>{successPdfGenerationMessage}</AlertTitle>
                     Si no funciona,{" "}
-                    <Link href={pathname} target="_blank">
+                    <Link href={state.pathname} target="_blank">
                       pulsa aquí
                     </Link>
                     .
                   </Alert>
                 </div>
               </Collapse>
-              <Collapse in={!!errorMessage}>
+              <Collapse in={state.status == "error"}>
                 <div className={classes.formElement}>
-                  <Alert severity="error"> {errorMessage} </Alert>
+                  <Alert severity="error"> {failPdfGenerationMessage} </Alert>
                 </div>
               </Collapse>
             </form>
