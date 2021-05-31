@@ -21,7 +21,7 @@ const generatePdf = async ({
   const doc = new PDFDocument({
     size: "A4",
     info: {
-      Author: "África Rodríguez Nieves",
+      Author: "Jhon Doe",
       Title: "Salvoconducto " + name,
     },
   })
@@ -32,7 +32,7 @@ const generatePdf = async ({
 
   doc
     .text(
-      "D.ª África Rodríguez Nieves, con DNI 31685789T, actuando como representante de la Asociación Cultural Los Guindales (CIF: G93505725)."
+      "D.ª Jhon Doe, con DNI 12345678A, actuando como representante de la Asociación Cultural Los Guindales (CIF: A0000000)."
     )
     .moveDown(1)
 
@@ -46,9 +46,9 @@ const generatePdf = async ({
   doc
     .list(
       [
-        "Correo electrónico: guindaluc@yahoo.es",
-        "Domicilio: C/ Los Barrancos 2, Algatocín, Málaga.",
-        "Teléfono: 664 368 784.",
+        "Correo electrónico: jhondoe@jhon.doe",
+        "Domicilio: Jhon's",
+        "Teléfono: 666 666 666.",
       ],
       { indent: indentation, bulletRadius: 2 }
     )
@@ -79,9 +79,9 @@ const generatePdf = async ({
     )
     .moveDown(2)
 
-  doc.text(`En Algatocín, a ${submissionDate}.`).moveDown(1)
+  doc.text(`En Jhon's, a ${submissionDate}.`).moveDown(1)
 
-  doc.text("Fdo.: África Rodríguez Nieves", { align: "center" })
+  doc.text("Fdo.: Jhon Doe", { align: "center" })
   doc.image(signatureImage, 200, undefined, {
     width: 200,
   })
