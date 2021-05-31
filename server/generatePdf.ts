@@ -69,7 +69,7 @@ const generatePdf = async ({
     .text(identityDocument, { continued: true })
     .font("Helvetica")
     .text(
-      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación los días ${date}`
+      ` es socio/a de la Asociación Cultural Los Guindales, en cuya sede realizará una formación ${date}`
     )
     .moveDown(1)
   doc
