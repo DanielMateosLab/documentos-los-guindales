@@ -1,5 +1,3 @@
-// TODO: move this code into an npm module: "@danielmat/utils"?
-
 abstract class HttpError extends Error {
   abstract statusCode: number
 }

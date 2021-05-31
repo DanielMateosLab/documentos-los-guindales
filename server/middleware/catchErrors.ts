@@ -3,8 +3,6 @@ import { NextApiHandler } from "next"
 import { ErrorResponse } from "utils/types"
 import { ValidationError } from "yup"
 
-// TODO: move this code into the utils module. Remember that simplisio's app code is richer.
-
 const catchErrors = (handler: NextApiHandler<any>) =>
   (async (req, res) => {
     try {

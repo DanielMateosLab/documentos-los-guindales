@@ -2,8 +2,6 @@ import TextField, { TextFieldProps } from "@material-ui/core/TextField"
 import { FieldHookConfig, useField } from "formik"
 import { InputHTMLAttributes } from "react"
 
-//TODO: Move this code into a module to avoid repetition across projects.
-
 interface Props {
   label: string
   type: InputHTMLAttributes<HTMLInputElement>
