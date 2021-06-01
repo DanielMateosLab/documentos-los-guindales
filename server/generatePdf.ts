@@ -15,7 +15,7 @@ const generatePdf = async ({
   identityDocument = "",
   date = "",
 }: PdfData): Promise<Buffer | string> => {
-  const signatureImagePath = path.resolve("./public", "Jhon_Doe_signature.svg")
+  const signatureImagePath = path.resolve("./public", "signature.jpg")
   const signatureImage = await fs.promises.readFile(signatureImagePath)
 
   const doc = new PDFDocument({
