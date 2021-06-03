@@ -1,4 +1,7 @@
 import { getServerSideProps } from "pages/pdf-safe-conduct/[name]"
+import { mockBuffer } from "server/__mocks__/generatePdf"
+
+jest.mock("server/generatePdf")
 
 describe("pdf safe conduct page", () => {
   describe("getServerSideProps", () => {
@@ -10,17 +13,10 @@ describe("pdf safe conduct page", () => {
       query: user,
       res: {
         end: jest.fn(),
+        setHeader: jest.fn(),
       },
     }
-    const mockBuffer = Buffer.from("a")
-    const generatePdfSpy = jest
-      .spyOn(require("server/generatePdf"), "default")
-      .mockImplementation(async () => mockBuffer)
-    it("should generate the pdf", async () => {
-      await getServerSideProps(context)
 
-      expect(generatePdfSpy).toHaveBeenCalledWith(user)
-    })
     it("should call res.end with the pdf buffer", async () => {
       await getServerSideProps(context)
 
