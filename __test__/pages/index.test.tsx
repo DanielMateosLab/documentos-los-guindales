@@ -1,7 +1,6 @@
 import userEvent from "@testing-library/user-event"
 import {
   dateLabel,
-  emailLabel,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
@@ -41,11 +40,6 @@ describe("index", () => {
       const identityDocumentInput = screen.getByLabelText(identityDocumentLabel)
 
       expect(identityDocumentInput).toBeVisible()
-    })
-    it.skip("should have an email input", () => {
-      const emailInput = screen.getByLabelText(emailLabel)
-
-      expect(emailInput).toBeVisible()
     })
     it("should have a submit button", () => {
       const submitButton = screen.getByRole("button", {
