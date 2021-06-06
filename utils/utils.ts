@@ -20,3 +20,18 @@ export const useIsSmallDevice = () => {
 
   return smallDevice
 }
+
+export function validateConfig(data: { [key: string]: any }): true | void {
+  const missing: string[] = []
+
+  Object.entries(data).forEach(([key, value]) => {
+    if (value == undefined) missing.push(key)
+  })
+
+  if (missing.length == 0) return true
+
+  const pluralModifier = missing.length > 1 ? "s" : ""
+  throw new Error(
+    `Missing environment variable${pluralModifier}: ${missing.join(", ")}`
+  )
+}
