@@ -1,6 +1,7 @@
 import userEvent from "@testing-library/user-event"
 import {
   dateLabel,
+  failPdfGenerationMessage,
   identityDocumentLabel,
   nameLabel,
   submitButtonText,
@@ -66,6 +67,18 @@ describe("index", () => {
         userEvent.click(screen.getByText(submitButtonText))
       }
 
+      const validateConfigSpy = jest
+        .spyOn(require("utils/utils"), "validateConfig")
+        .mockImplementation(() => true)
+
+      it("should ensure the configuration variables are present", async () => {
+        fillFormAndSubmit()
+
+        await waitFor(() => {
+          expect(validateConfigSpy).toHaveBeenCalled()
+        })
+      })
+
       it("should open the pdf creation page in a new tab", async () => {
         fillFormAndSubmit()
 
@@ -73,20 +86,34 @@ describe("index", () => {
           expect(global.open).toHaveBeenCalledWith(pathname, "_blank")
         })
       })
-      it("should set a success message after clicking the submit button", async () => {
-        fillFormAndSubmit()
 
-        const successMessage = await screen.findByText(
-          successPdfGenerationMessage
-        )
-        expect(successMessage).toBeVisible()
+      describe("success message", () => {
+        it("should set a success message after clicking the submit button", async () => {
+          fillFormAndSubmit()
+
+          const successMessage = await screen.findByText(
+            successPdfGenerationMessage
+          )
+          expect(successMessage).toBeVisible()
+        })
+        test("the success message should have a link to the pdf creation page", async () => {
+          fillFormAndSubmit()
+
+          const link = await screen.findByRole("link")
+          expect(link).toBeVisible()
+          expect(link).toHaveProperty("href", "http://localhost" + pathname)
+        })
       })
-      test("the success message should have a link to the pdf creation page", async () => {
-        fillFormAndSubmit()
 
-        const link = await screen.findByRole("link")
-        expect(link).toBeVisible()
-        expect(link).toHaveProperty("href", "http://localhost" + pathname)
+      it("should show an error message when an error takes place", async () => {
+        validateConfigSpy.mockImplementationOnce(() => {
+          throw new Error("mockError")
+        })
+
+        fillFormAndSubmit()
+        const errorMessage = await screen.findByText(failPdfGenerationMessage)
+
+        expect(errorMessage).toBeVisible()
       })
     })
   })

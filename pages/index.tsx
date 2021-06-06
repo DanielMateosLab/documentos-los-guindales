@@ -1,9 +1,10 @@
 import pdfSafeConductReducer from "client/pdf-safe-conduct/reducer"
 import SafeConductForm from "client/pdf-safe-conduct/safeConductForm"
+import { sensibleData } from "config"
 import { Formik, FormikHelpers } from "formik"
 import { useReducer } from "react"
 import { SafeConductFormValues } from "utils/types"
-import { getPathname } from "utils/utils"
+import { getPathname, validateConfig } from "utils/utils"
 import { safeConductValidator } from "utils/validation"
 
 export default function Home() {
@@ -22,19 +23,27 @@ export default function Home() {
     values: SafeConductFormValues,
     { setSubmitting }: FormikHelpers<SafeConductFormValues>
   ) => {
-    dispatch({ type: "setStatus", payload: undefined })
+    try {
+      dispatch({ type: "setStatus", payload: undefined })
 
-    // Why not to set the pathname and then use it in window.open()?
-    //  For performance reasons, react sometimes does not update the state inmediatly
-    //  so the opened tab has not the updated path
-    const newPathname = getPathname({ ...values })
-    window.open(newPathname, "_blank")
-    dispatch({ type: "setPathname", payload: newPathname })
+      validateConfig(sensibleData)
 
-    window.localStorage.setItem("date", values.date)
+      // Why not to set the pathname and then use it in window.open()?
+      //  For performance reasons, react sometimes does not update the state inmediatly
+      //  so the opened tab has not the updated path
+      const newPathname = getPathname({ ...values })
+      window.open(newPathname, "_blank")
+      dispatch({ type: "setPathname", payload: newPathname })
 
-    dispatch({ type: "setStatus", payload: "success" })
-    setSubmitting(false)
+      window.localStorage.setItem("date", values.date)
+
+      dispatch({ type: "setStatus", payload: "success" })
+    } catch (error) {
+      dispatch({ type: "setStatus", payload: "error" })
+      console.error(error.message)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
