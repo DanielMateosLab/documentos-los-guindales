@@ -1,14 +1,18 @@
 import { Container, makeStyles, Typography } from "@material-ui/core"
 import { Alert, AlertTitle } from "@material-ui/lab"
+import { sensibleData } from "config"
 import { GetServerSideProps } from "next"
 import generatePdf from "server/generatePdf"
 import { PdfData } from "utils/types"
+import { validateConfig } from "utils/utils"
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   res,
 }) => {
   try {
+    validateConfig(sensibleData)
+
     const pdf = await generatePdf((query as unknown) as PdfData)
 
     res.setHeader("Content-Type", "application/pdf")
